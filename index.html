@@ -1,1089 +1,587 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Lumiar">
 <meta name="theme-color" content="#0a0a0a">
 <title>Lumiar · Plano de Marca</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --k:#0a0a0a;
-  --k2:#111111;
-  --k3:#1a1a1a;
-  --g:#b8974a;
-  --gl:#d4b06a;
-  --c:#f0ebe0;
-  --c2:rgba(240,235,224,0.6);
-  --c3:rgba(240,235,224,0.3);
-  --border:rgba(184,151,74,0.18);
-  --r:12px;
-  --safe-bottom:env(safe-area-inset-bottom,0px);
-}
-html{height:100%;overflow:hidden}
-body{
-  background:var(--k);
-  color:var(--c);
-  font-family:'Montserrat',sans-serif;
-  font-weight:300;
-  height:100%;
-  display:flex;
-  flex-direction:column;
-  overflow:hidden;
-  -webkit-font-smoothing:antialiased;
-}
-
-/* ── HEADER ── */
-.hdr{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:16px 20px 12px;
-  padding-top:calc(16px + env(safe-area-inset-top,0px));
-  border-bottom:1px solid var(--border);
-  background:rgba(10,10,10,0.98);
-  backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(20px);
-  flex-shrink:0;
-  z-index:50;
-}
-.logo{
-  font-family:'Cormorant Garamond',serif;
-  font-size:22px;
-  font-weight:300;
-  letter-spacing:5px;
-  color:var(--g);
-  text-transform:uppercase;
-}
-.progress-pill{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  background:var(--k3);
-  border:1px solid var(--border);
-  border-radius:20px;
-  padding:6px 12px;
-}
-.progress-pill span{
-  font-size:10px;
-  letter-spacing:1px;
-  color:var(--c2);
-}
-.progress-pill strong{
-  font-size:12px;
-  color:var(--g);
-  font-weight:500;
-}
-
-/* ── NAV TABS ── */
-.tabs{
-  display:flex;
-  gap:0;
-  overflow-x:auto;
-  padding:0 16px;
-  border-bottom:1px solid var(--border);
-  background:rgba(10,10,10,0.98);
-  backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(20px);
-  flex-shrink:0;
-  scrollbar-width:none;
-}
-.tabs::-webkit-scrollbar{display:none}
-.tab{
-  flex-shrink:0;
-  padding:12px 16px;
-  font-size:9px;
-  letter-spacing:2.5px;
-  text-transform:uppercase;
-  color:var(--c3);
-  cursor:pointer;
-  border-bottom:2px solid transparent;
-  transition:all .25s;
-  white-space:nowrap;
-  user-select:none;
-  -webkit-tap-highlight-color:transparent;
-}
-.tab.active{
-  color:var(--g);
-  border-bottom-color:var(--g);
-}
-.tab:hover{color:var(--c2)}
-
-/* ── MAIN CONTENT ── */
-.main{
-  flex:1;
-  overflow-y:auto;
-  overflow-x:hidden;
-  -webkit-overflow-scrolling:touch;
-  scroll-behavior:smooth;
-}
-.screen{
-  display:none;
-  animation:fadeIn .3s ease;
-  min-height:100%;
-  padding-bottom:calc(32px + var(--safe-bottom));
-}
-.screen.active{display:block}
-@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-
-/* ── SHARED COMPONENTS ── */
-.section-wrap{max-width:720px;margin:0 auto;padding:28px 20px}
-.eyebrow{
-  font-size:9px;
-  letter-spacing:4px;
-  text-transform:uppercase;
-  color:var(--g);
-  margin-bottom:10px;
-  display:block;
-}
-.h1{
-  font-family:'Cormorant Garamond',serif;
-  font-size:clamp(30px,7vw,52px);
-  font-weight:300;
-  line-height:1.1;
-  letter-spacing:-0.5px;
-  margin-bottom:8px;
-}
-.h1 em{font-style:italic;color:var(--gl)}
-.h2{
-  font-family:'Cormorant Garamond',serif;
-  font-size:clamp(22px,5vw,36px);
-  font-weight:300;
-  line-height:1.15;
-  margin-bottom:6px;
-}
-.h2 em{font-style:italic;color:var(--gl)}
-.subtitle{
-  font-size:9px;
-  letter-spacing:3px;
-  text-transform:uppercase;
-  color:var(--c3);
-  margin-bottom:24px;
-  padding-bottom:20px;
-  border-bottom:1px solid var(--border);
-}
-.body-text{
-  font-size:13px;
-  color:var(--c2);
-  line-height:1.85;
-  margin-bottom:24px;
-  max-width:580px;
-}
-.divider{
-  width:100%;
-  height:1px;
-  background:var(--border);
-  margin:24px 0;
-}
-.quote{
-  border-left:1px solid var(--g);
-  padding:14px 20px;
-  margin:24px 0;
-  font-family:'Cormorant Garamond',serif;
-  font-size:clamp(18px,4vw,24px);
-  font-style:italic;
-  font-weight:300;
-  color:rgba(240,235,224,0.85);
-  line-height:1.5;
-}
-
-/* ── CARDS GRID ── */
-.cards{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
-  gap:1px;
-  background:var(--border);
-  border:1px solid var(--border);
-  border-radius:var(--r);
-  overflow:hidden;
-  margin:20px 0;
-}
-.card{
-  background:var(--k2);
-  padding:22px 18px;
-  transition:background .2s;
-}
-.card:active{background:var(--k3)}
-.card-num{
-  font-size:8px;
-  letter-spacing:3px;
-  color:var(--g);
-  margin-bottom:10px;
-  display:block;
-}
-.card h4{
-  font-family:'Cormorant Garamond',serif;
-  font-size:17px;
-  font-weight:400;
-  margin-bottom:8px;
-  line-height:1.3;
-}
-.card p{font-size:11px;color:var(--c3);line-height:1.75}
-
-/* ── SWAP TABLE ── */
-.swaps{
-  border:1px solid var(--border);
-  border-radius:var(--r);
-  overflow:hidden;
-  margin:20px 0;
-}
-.swap-row{
-  display:grid;
-  grid-template-columns:1fr 20px 1fr;
-  align-items:center;
-  gap:12px;
-  padding:14px 16px;
-  border-bottom:1px solid var(--border);
-  transition:background .2s;
-}
-.swap-row:last-child{border-bottom:none}
-.swap-row:active{background:var(--k3)}
-.from{font-size:11px;color:rgba(240,235,224,0.3);text-decoration:line-through}
-.arr{font-size:12px;color:var(--g);opacity:0.5;text-align:center}
-.to{font-size:11px;color:var(--c);font-weight:400}
-
-/* ── TAGS ── */
-.tags{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
-.tag{
-  border:1px solid var(--border);
-  border-radius:20px;
-  padding:5px 12px;
-  font-size:10px;
-  letter-spacing:1.5px;
-  color:var(--c2);
-  transition:all .2s;
-}
-.tag:active{border-color:var(--g);color:var(--g)}
-
-/* ── TIMELINE ── */
-.timeline{position:relative;padding-left:24px;margin:24px 0}
-.timeline::before{
-  content:'';
-  position:absolute;
-  left:0;top:0;bottom:0;
-  width:1px;
-  background:linear-gradient(to bottom,var(--g),rgba(184,151,74,0.1));
-}
-.tl-item{
-  position:relative;
-  padding:0 0 28px 20px;
-}
-.tl-item::before{
-  content:'';
-  position:absolute;
-  left:-4px;top:5px;
-  width:9px;height:9px;
-  background:var(--g);
-  border-radius:50%;
-}
-.tl-tag{
-  font-size:8px;
-  letter-spacing:3px;
-  text-transform:uppercase;
-  color:var(--g);
-  margin-bottom:4px;
-  display:block;
-}
-.tl-title{
-  font-family:'Cormorant Garamond',serif;
-  font-size:18px;
-  font-weight:400;
-  margin-bottom:6px;
-}
-.tl-desc{font-size:11px;color:var(--c3);line-height:1.75}
-
-/* ── CHECKLIST ── */
-.checklist{
-  border:1px solid var(--border);
-  border-radius:var(--r);
-  overflow:hidden;
-  margin:20px 0;
-}
-.check-item{
-  display:flex;
-  align-items:flex-start;
-  gap:14px;
-  padding:16px;
-  border-bottom:1px solid var(--border);
-  cursor:pointer;
-  transition:background .2s;
-  -webkit-tap-highlight-color:transparent;
-}
-.check-item:last-child{border-bottom:none}
-.check-item:active{background:var(--k3)}
-.check-item.done{opacity:0.45}
-.check-item.done .check-label{text-decoration:line-through}
-.check-box{
-  width:20px;height:20px;min-width:20px;
-  border:1px solid var(--border);
-  border-radius:4px;
-  display:flex;align-items:center;justify-content:center;
-  margin-top:1px;
-  transition:all .2s;
-  background:var(--k2);
-}
-.check-item.done .check-box{
-  background:var(--g);
-  border-color:var(--g);
-}
-.check-tick{font-size:11px;color:var(--k);display:none}
-.check-item.done .check-tick{display:block}
-.check-label{font-size:12px;color:var(--c);line-height:1.6}
-.check-sub{font-size:10px;color:var(--c3);margin-top:2px}
-
-/* ── METRICS ── */
-.metrics{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:1px;
-  background:var(--border);
-  border:1px solid var(--border);
-  border-radius:var(--r);
-  overflow:hidden;
-  margin:20px 0;
-}
-.metric{background:var(--k2);padding:22px 16px;text-align:center}
-.metric-n{
-  font-family:'Cormorant Garamond',serif;
-  font-size:42px;
-  font-weight:300;
-  color:var(--g);
-  line-height:1;
-  display:block;
-  margin-bottom:6px;
-}
-.metric-l{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--c3)}
-
-/* ── PILLARS ── */
-.pillars{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:1px;
-  background:var(--border);
-  border:1px solid var(--border);
-  border-radius:var(--r);
-  overflow:hidden;
-  margin:20px 0;
-}
-.pillar{background:var(--k2);padding:22px 18px}
-.pillar-icon{font-size:18px;margin-bottom:12px;display:block}
-.pillar h4{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:400;margin-bottom:8px}
-.pillar p{font-size:11px;color:var(--c3);line-height:1.75}
-
-/* ── WEEKLY GRID ── */
-.week-grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:1px;
-  background:var(--border);
-  border:1px solid var(--border);
-  border-radius:var(--r);
-  overflow:hidden;
-  margin:20px 0;
-}
-.week-card{background:var(--k2);padding:18px}
-.week-day{font-size:8px;letter-spacing:3px;color:var(--g);margin-bottom:6px;display:block}
-.week-card h4{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:400;margin-bottom:6px}
-.week-card p{font-size:10px;color:var(--c3);line-height:1.7}
-
-/* ── HOME SCREEN ── */
-.home-hero{
-  min-height:40vh;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  padding:40px 20px 32px;
-  text-align:center;
-  background:radial-gradient(ellipse at 50% 80%,rgba(184,151,74,0.08) 0%,transparent 65%);
-  border-bottom:1px solid var(--border);
-  position:relative;
-  overflow:hidden;
-}
-.home-hero::before{
-  content:'';
-  position:absolute;inset:0;
-  background:repeating-linear-gradient(90deg,transparent,transparent 59px,rgba(184,151,74,0.03) 59px,rgba(184,151,74,0.03) 60px);
-  pointer-events:none;
-}
-.hero-orn{
-  width:1px;height:40px;
-  background:linear-gradient(to bottom,transparent,var(--g));
-  margin:0 auto 20px;
-}
-.hero-eye{
-  font-size:9px;letter-spacing:4px;text-transform:uppercase;
-  color:var(--g);margin-bottom:16px;
-}
-.hero-h{
-  font-family:'Cormorant Garamond',serif;
-  font-size:clamp(34px,8vw,60px);
-  font-weight:300;line-height:1.08;
-  margin-bottom:12px;
-}
-.hero-h em{font-style:italic;color:var(--gl)}
-.hero-sub{
-  font-size:9px;letter-spacing:3px;text-transform:uppercase;
-  color:var(--c3);margin-bottom:0;
-}
-
-/* Progress ring */
-.ring-wrap{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:8px;
-  margin:28px 0 0;
-}
-.ring-svg{width:72px;height:72px}
-.ring-bg{fill:none;stroke:var(--k3);stroke-width:4}
-.ring-fg{
-  fill:none;stroke:var(--g);stroke-width:4;
-  stroke-linecap:round;
-  stroke-dasharray:188;
-  transform:rotate(-90deg);transform-origin:50% 50%;
-  transition:stroke-dashoffset .8s cubic-bezier(0.4,0,0.2,1);
-}
-.ring-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--c3)}
-.ring-pct{
-  font-family:'Cormorant Garamond',serif;
-  font-size:16px;font-weight:300;
-  fill:var(--g);
-  text-anchor:middle;dominant-baseline:middle;
-}
-
-/* Quick stats */
-.quick-stats{
-  display:grid;grid-template-columns:repeat(3,1fr);
-  gap:1px;background:var(--border);
-  border:1px solid var(--border);border-radius:var(--r);
-  overflow:hidden;margin:24px 0;
-}
-.qs{background:var(--k2);padding:18px 12px;text-align:center}
-.qs-n{
-  font-family:'Cormorant Garamond',serif;
-  font-size:32px;font-weight:300;color:var(--g);
-  display:block;line-height:1;margin-bottom:5px;
-}
-.qs-l{font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:var(--c3)}
-
-/* Nav shortcuts */
-.shortcuts{
-  display:grid;grid-template-columns:repeat(2,1fr);
-  gap:12px;margin:24px 0;
-}
-.shortcut{
-  background:var(--k2);border:1px solid var(--border);
-  border-radius:var(--r);padding:18px 16px;
-  cursor:pointer;transition:all .2s;
-  -webkit-tap-highlight-color:transparent;
-}
-.shortcut:active{background:var(--k3);border-color:var(--g)}
-.sc-num{font-size:8px;letter-spacing:3px;color:var(--g);margin-bottom:8px;display:block}
-.sc-title{
-  font-family:'Cormorant Garamond',serif;
-  font-size:16px;font-weight:400;line-height:1.3;
-  margin-bottom:4px;
-}
-.sc-sub{font-size:10px;color:var(--c3)}
-
-/* Resultado box */
-.res-box{
-  border:1px solid var(--border);
-  border-radius:var(--r);
-  padding:32px 24px;
-  text-align:center;
-  background:radial-gradient(ellipse at center,rgba(184,151,74,0.05) 0%,transparent 70%);
-  margin:24px 0;
-  position:relative;
-}
-.res-box::before{
-  content:'RESULTADO';
-  position:absolute;top:-8px;left:50%;transform:translateX(-50%);
-  background:var(--k);padding:0 12px;
-  font-size:8px;letter-spacing:4px;color:var(--g);
-}
-.res-box h3{
-  font-family:'Cormorant Garamond',serif;
-  font-size:clamp(20px,5vw,30px);
-  font-weight:300;line-height:1.3;margin-bottom:12px;
-}
-.res-box p{font-size:12px;color:var(--c3);line-height:1.8}
-
-/* ── SCROLLBAR ── */
-.main::-webkit-scrollbar{width:3px}
-.main::-webkit-scrollbar-track{background:var(--k)}
-.main::-webkit-scrollbar-thumb{background:var(--g);border-radius:2px}
+html,body{height:100%;overflow:hidden;background:#0a0a0a;-webkit-font-smoothing:antialiased}
+body{display:flex;flex-direction:column;font-family:'Montserrat',sans-serif;font-weight:300;color:#f0ebe0}
+*{-webkit-tap-highlight-color:transparent}
+a{color:#b8974a;text-decoration:none}
+::-webkit-scrollbar{width:0;height:0}
+@keyframes lmIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 </style>
 </head>
 <body>
 
 <!-- HEADER -->
-<header class="hdr">
-  <div class="logo">Lumiar</div>
-  <div class="progress-pill">
-    <span>Progresso</span>
-    <strong id="pct-hdr">0%</strong>
+<header id="hdr" style="flex:none;z-index:5;padding:calc(env(safe-area-inset-top,0px) + 14px) 18px 12px;display:flex;align-items:center;gap:12px;background:#0a0a0a;border-bottom:1px solid rgba(184,151,74,0.14)">
+  <button id="btn-back" aria-label="Voltar" onclick="App.go('fases')" style="flex:none;width:38px;height:38px;display:none;align-items:center;justify-content:center;border:1px solid rgba(184,151,74,0.22);border-radius:10px;background:#111111;color:#b8974a;cursor:pointer;transition:background .2s ease">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M15 5l-7 7 7 7"/></svg>
+  </button>
+  <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px">
+    <div style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:17px;letter-spacing:4.5px;color:#b8974a;line-height:1">LUMIAR</div>
+    <div id="hdr-sub" style="font-size:8px;letter-spacing:2.6px;text-transform:uppercase;color:rgba(240,235,224,0.32);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Plano de elevação · 12 meses</div>
   </div>
+  <button onclick="App.go('perfil')" aria-label="Perfil" style="flex:none;width:38px;height:38px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(184,151,74,0.22);border-radius:100px;background:#111111;font-family:'Cormorant Garamond',serif;font-size:14px;color:#f0ebe0;cursor:pointer;transition:background .2s ease">L</button>
 </header>
 
-<!-- TABS -->
-<nav class="tabs">
-  <div class="tab active" data-tab="home">Início</div>
-  <div class="tab" data-tab="identidade">Identidade</div>
-  <div class="tab" data-tab="linguagem">Linguagem</div>
-  <div class="tab" data-tab="visual">Visual</div>
-  <div class="tab" data-tab="experiencia">Experiência</div>
-  <div class="tab" data-tab="digital">Digital</div>
-  <div class="tab" data-tab="agenda">Cronograma</div>
-</nav>
-
 <!-- MAIN -->
-<main class="main">
-
-  <!-- ══ HOME ══ -->
-  <div class="screen active" id="screen-home">
-    <div class="home-hero">
-      <div class="hero-orn"></div>
-      <div class="hero-eye">Lumiar Retratos Studio · Guaíra SP</div>
-      <h1 class="hero-h">Plano de<br><em>Elevação</em><br>de Marca</h1>
-      <div class="hero-sub">Reposicionamento Premium · 12 Meses</div>
-      <div class="ring-wrap">
-        <svg class="ring-svg" viewBox="0 0 72 72">
-          <circle class="ring-bg" cx="36" cy="36" r="30"/>
-          <circle class="ring-fg" id="ring-circle" cx="36" cy="36" r="30" stroke-dashoffset="188"/>
-          <text class="ring-pct" x="36" y="37" id="ring-text">0%</text>
-        </svg>
-        <span class="ring-label">tarefas concluídas</span>
-      </div>
-    </div>
-
-    <div class="section-wrap">
-      <div class="quick-stats">
-        <div class="qs"><span class="qs-n">7</span><span class="qs-l">Fases</span></div>
-        <div class="qs"><span class="qs-n">90</span><span class="qs-l">Dias Premium</span></div>
-        <div class="qs"><span class="qs-n">12</span><span class="qs-l">Meses</span></div>
-      </div>
-
-      <span class="eyebrow">Navegar pelo plano</span>
-      <div class="shortcuts">
-        <div class="shortcut" data-goto="identidade">
-          <span class="sc-num">01</span>
-          <div class="sc-title">Identidade de Marca</div>
-          <div class="sc-sub">Fundação de tudo</div>
-        </div>
-        <div class="shortcut" data-goto="linguagem">
-          <span class="sc-num">02</span>
-          <div class="sc-title">Linguagem</div>
-          <div class="sc-sub">Vocabulário oficial</div>
-        </div>
-        <div class="shortcut" data-goto="visual">
-          <span class="sc-num">03</span>
-          <div class="sc-title">Visual</div>
-          <div class="sc-sub">Feed editorial</div>
-        </div>
-        <div class="shortcut" data-goto="experiencia">
-          <span class="sc-num">04</span>
-          <div class="sc-title">Experiência</div>
-          <div class="sc-sub">Luxo emocional</div>
-        </div>
-        <div class="shortcut" data-goto="digital">
-          <span class="sc-num">05</span>
-          <div class="sc-title">Digital</div>
-          <div class="sc-sub">Grade + campanhas</div>
-        </div>
-        <div class="shortcut" data-goto="agenda">
-          <span class="sc-num">06</span>
-          <div class="sc-title">Cronograma</div>
-          <div class="sc-sub">Tarefas com check</div>
-        </div>
-      </div>
-
-      <div class="quote">"A maternidade transformada em arte. Retratos que atravessam gerações."</div>
-    </div>
-  </div>
-
-  <!-- ══ IDENTIDADE ══ -->
-  <div class="screen" id="screen-identidade">
-    <div class="section-wrap">
-      <span class="eyebrow">01 · Identidade de Marca</span>
-      <h2 class="h1">A Lumiar não é<br>um estúdio.<br>É uma <em>experiência.</em></h2>
-      <div class="subtitle">Implementação imediata · Fundação de tudo</div>
-      <p class="body-text">A primeira e mais profunda melhoria é conceitual: redefinir o que a Lumiar é. Essa mudança de identidade precisa permear absolutamente tudo — da bio ao atendimento, da legenda à direção artística.</p>
-
-      <div class="pillars">
-        <div class="pillar">
-          <span class="pillar-icon">✦</span>
-          <h4>O que eliminar</h4>
-          <p>Linguagem de commodity, promoções, pacotes, posts genéricos, comunicação de loja, preço em destaque, excesso de texto, artes poluídas.</p>
-        </div>
-        <div class="pillar">
-          <span class="pillar-icon">◆</span>
-          <h4>O que construir</h4>
-          <p>Identidade autoral, narrativa emocional, exclusividade silenciosa, curadoria de conteúdo, direção artística consistente.</p>
-        </div>
-        <div class="pillar">
-          <span class="pillar-icon">◇</span>
-          <h4>Posicionamento</h4>
-          <p>Especialista em retratos femininos e maternidade. Não generalista. A especialização cria percepção de autoridade.</p>
-        </div>
-        <div class="pillar">
-          <span class="pillar-icon">✧</span>
-          <h4>Proposta de valor</h4>
-          <p>Não vendemos fotos. Criamos memórias atemporais com direção artística e uma experiência que começa antes do ensaio.</p>
-        </div>
-      </div>
-
-      <div class="quote">"Quando alguém entrar no perfil da Lumiar, precisa sentir: admiração, desejo, emoção, sofisticação, acolhimento."</div>
-
-      <span class="eyebrow">A Lumiar fala como</span>
-      <div class="cards">
-        <div class="card">
-          <span class="card-num">✓</span>
-          <h4>Refinada</h4>
-          <p>Linguagem elegante em todos os pontos de contato. Da bio ao WhatsApp.</p>
-        </div>
-        <div class="card">
-          <span class="card-num">✓</span>
-          <h4>Acolhedora</h4>
-          <p>Calor humano sem perder a sofisticação. A cliente se sente vista e valorizada.</p>
-        </div>
-        <div class="card">
-          <span class="card-num">✓</span>
-          <h4>Artística</h4>
-          <p>Direção estética clara e reconhecível. Uma assinatura visual inconfundível.</p>
-        </div>
-        <div class="card">
-          <span class="card-num">✓</span>
-          <h4>Emocionalmente segura</h4>
-          <p>Não precisa de promoção para vender. O desejo precede a pergunta de preço.</p>
-        </div>
-      </div>
-
-      <div class="res-box">
-        <h3>A percepção muda de<br><em style="color:rgba(240,235,224,0.35);font-style:italic">"quanto custa?"</em><br>para<br><em style="color:var(--gl);font-style:italic">"eu quero fotografar lá."</em></h3>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══ LINGUAGEM ══ -->
-  <div class="screen" id="screen-linguagem">
-    <div class="section-wrap">
-      <span class="eyebrow">02 · Linguagem de Marca</span>
-      <h2 class="h1">Cada palavra<br>precisa gerar <em>desejo.</em></h2>
-      <div class="subtitle">Aplicar em todos os pontos de contato · Agora</div>
-      <p class="body-text">A linguagem é o posicionamento em ação. Toda troca de vocabulário abaixo representa uma mudança de percepção — de commodity para luxo emocional.</p>
-
-      <span class="eyebrow">Trocas obrigatórias</span>
-      <div class="swaps">
-        <div class="swap-row"><span class="from">Ensaio</span><span class="arr">→</span><span class="to">Retrato autoral · Experiência fotográfica</span></div>
-        <div class="swap-row"><span class="from">Cliente</span><span class="arr">→</span><span class="to">Mulher · História · Família</span></div>
-        <div class="swap-row"><span class="from">Pacote / Combo</span><span class="arr">→</span><span class="to">Coleção · Proposta exclusiva</span></div>
-        <div class="swap-row"><span class="from">Fotos / Sessãozinha</span><span class="arr">→</span><span class="to">Retratos · Memórias atemporais</span></div>
-        <div class="swap-row"><span class="from">Últimas vagas</span><span class="arr">→</span><span class="to">Agenda exclusiva para experiências</span></div>
-        <div class="swap-row"><span class="from">Promoção / Desconto</span><span class="arr">→</span><span class="to">Nunca. Venda valor, não preço.</span></div>
-        <div class="swap-row"><span class="from">Registrar momentos</span><span class="arr">→</span><span class="to">Transformar histórias em retratos atemporais</span></div>
-        <div class="swap-row"><span class="from">Você vai arrasar</span><span class="arr">→</span><span class="to">Existe uma beleza única em cada fase da mulher</span></div>
-        <div class="swap-row"><span class="from">Book</span><span class="arr">→</span><span class="to">Experiência Lumiar</span></div>
-        <div class="swap-row"><span class="from">Mamãe e bebê</span><span class="arr">→</span><span class="to">Antes do primeiro olhar, já existe amor</span></div>
-      </div>
-
-      <span class="eyebrow">Vocabulário que eleva</span>
-      <div class="tags">
-        <span class="tag">experiência</span><span class="tag">retrato autoral</span><span class="tag">legado</span>
-        <span class="tag">memória</span><span class="tag">essência</span><span class="tag">presença</span>
-        <span class="tag">beleza real</span><span class="tag">conexão</span><span class="tag">atemporal</span>
-        <span class="tag">sofisticado</span><span class="tag">exclusivo</span><span class="tag">maternidade</span>
-        <span class="tag">autoral</span><span class="tag">emoção</span><span class="tag">coleção</span>
-      </div>
-
-      <div class="divider"></div>
-      <span class="eyebrow">Frases-assinatura</span>
-
-      <div class="quote">"A maternidade transformada em arte."</div>
-      <div class="quote">"Retratos femininos com alma, elegância e significado."</div>
-      <div class="quote">"A beleza da sua história merece ser eternizada."</div>
-      <div class="quote">"Existe uma força silenciosa na mulher que gera vida."</div>
-      <div class="quote">"O tempo passa. Esse sentimento permanece."</div>
-      <div class="quote">"Toda mulher carrega versões extraordinárias de si."</div>
-
-      <div class="divider"></div>
-      <span class="eyebrow">Exemplo de legenda premium</span>
-      <p class="body-text" style="border-left:1px solid var(--border);padding-left:16px;font-style:italic">Existe algo profundamente transformador na espera por um filho.<br><br>O tempo desacelera. O olhar muda. A mulher floresce de uma forma impossível de explicar.<br><br>Na Lumiar, cada experiência é construída para eternizar essa fase com delicadeza, sofisticação e verdade.<br><br>Porque algumas memórias merecem atravessar gerações.<br><br>✨ Agenda exclusiva para experiências de maternidade.</p>
-    </div>
-  </div>
-
-  <!-- ══ VISUAL ══ -->
-  <div class="screen" id="screen-visual">
-    <div class="section-wrap">
-      <span class="eyebrow">03 · Identidade Visual</span>
-      <h2 class="h1">O feed precisa<br>parecer <em>editorial.</em></h2>
-      <div class="subtitle">Primeiros 15 dias · Impacto imediato</div>
-      <p class="body-text">Quando alguém entrar no perfil da Lumiar, precisa sentir imediatamente: admiração, desejo, sofisticação. Isso não depende de equipamento caro — depende de direção estética intencional e consistente.</p>
-
-      <div class="cards">
-        <div class="card">
-          <span class="card-num">01</span>
-          <h4>Paleta oficial</h4>
-          <p>Preto elegante, branco, dourado discreto, bege, tons quentes de pele. Eliminar cores aleatórias e artes coloridas sem identidade.</p>
-        </div>
-        <div class="card">
-          <span class="card-num">02</span>
-          <h4>Luz cinematográfica</h4>
-          <p>Suave, elegante, contraste refinado. Referência: editorial Vogue, maternidade fine art, cinema emocional.</p>
-        </div>
-        <div class="card">
-          <span class="card-num">03</span>
-          <h4>Direção de poses</h4>
-          <p>Menos pose artificial, mais emoção e presença. Tecidos esvoaçantes, mãos expressivas, olhares profundos.</p>
-        </div>
-        <div class="card">
-          <span class="card-num">04</span>
-          <h4>Edição consistente</h4>
-          <p>Pele refinada e natural. Sem exagero. A assinatura visual da Lumiar deve ser reconhecível antes de ver o logo.</p>
-        </div>
-        <div class="card">
-          <span class="card-num">05</span>
-          <h4>Arquivar posts fracos</h4>
-          <p>Remover: promoções, artes amadoras, posts sem identidade, imagens abaixo do novo padrão.</p>
-        </div>
-        <div class="card">
-          <span class="card-num">06</span>
-          <h4>Tipografia fina</h4>
-          <p>Pouco texto nas artes. Quando houver, fonte fina, elegante, com muito espaço negativo. Nunca fontes baratas.</p>
-        </div>
-      </div>
-
-      <div class="divider"></div>
-      <span class="eyebrow">O que eliminar</span>
-      <div class="tags">
-        <span class="tag" style="border-color:rgba(255,80,80,0.25);color:rgba(255,100,100,0.6)">artes poluídas</span>
-        <span class="tag" style="border-color:rgba(255,80,80,0.25);color:rgba(255,100,100,0.6)">excesso de texto</span>
-        <span class="tag" style="border-color:rgba(255,80,80,0.25);color:rgba(255,100,100,0.6)">promoções</span>
-        <span class="tag" style="border-color:rgba(255,80,80,0.25);color:rgba(255,100,100,0.6)">poses artificiais</span>
-        <span class="tag" style="border-color:rgba(255,80,80,0.25);color:rgba(255,100,100,0.6)">feed aleatório</span>
-        <span class="tag" style="border-color:rgba(255,80,80,0.25);color:rgba(255,100,100,0.6)">excesso de acessórios</span>
-      </div>
-
-      <span class="eyebrow" style="margin-top:16px">O que adotar</span>
-      <div class="tags">
-        <span class="tag">close emocional</span><span class="tag">luz cinematográfica</span>
-        <span class="tag">direção elegante</span><span class="tag">textura</span>
-        <span class="tag">tecidos fluidos</span><span class="tag">storytelling</span>
-        <span class="tag">vídeos lentos</span><span class="tag">estética Vogue</span>
-      </div>
-
-      <div class="quote">"Quando alguém vir a luz, a edição, a pose, o enquadramento — precisa pensar: isso é Lumiar."</div>
-
-      <div class="divider"></div>
-      <span class="eyebrow">Destaques do Instagram</span>
-      <div class="cards">
-        <div class="card"><span class="card-num">✦</span><h4>EXPERIÊNCIA</h4><p>Atendimento, bastidores, acolhimento, preparação.</p></div>
-        <div class="card"><span class="card-num">✦</span><h4>GESTANTES</h4><p>Melhores fotos, vídeos sofisticados, close emocional.</p></div>
-        <div class="card"><span class="card-num">✦</span><h4>BASTIDORES</h4><p>Tecidos, luz, direção, detalhes — refinados.</p></div>
-        <div class="card"><span class="card-num">✦</span><h4>DEPOIMENTOS</h4><p>Vídeos reais: emoção, reação, experiência.</p></div>
-        <div class="card"><span class="card-num">✦</span><h4>LUMIAR</h4><p>História e filosofia da marca.</p></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══ EXPERIÊNCIA ══ -->
-  <div class="screen" id="screen-experiencia">
-    <div class="section-wrap">
-      <span class="eyebrow">04 · Experiência da Cliente</span>
-      <h2 class="h1">Luxo não é ouro.<br>Luxo é <em>sensação.</em></h2>
-      <div class="subtitle">45 dias · Transformação do atendimento</div>
-      <p class="body-text">A cliente precisa passar de "estou fazendo fotos" para "estou vivendo algo especial". Esse sentimento começa no primeiro contato e termina depois da entrega.</p>
-
-      <div class="timeline">
-        <div class="tl-item">
-          <span class="tl-tag">Pré-atendimento</span>
-          <div class="tl-title">Primeiro contato refinado</div>
-          <p class="tl-desc">Áudio humanizado e caloroso. Linguagem elegante desde a primeira mensagem. Consultoria de figurino enviada com cuidado. Orientações sobre cores, maquiagem, acessórios — tudo pensado para ela se sentir preparada e valorizada antes de chegar.</p>
-        </div>
-        <div class="tl-item">
-          <span class="tl-tag">Durante</span>
-          <div class="tl-title">Condução emocional e sofisticada</div>
-          <p class="tl-desc">Ambiente calmo e esteticamente refinado. Elogios sinceros e direção gentil. A cliente precisa se sentir segura, acolhida e vista. Não é ensaio — é condução artística de uma história real.</p>
-        </div>
-        <div class="tl-item">
-          <span class="tl-tag">Bastidores</span>
-          <div class="tl-title">O que mostrar nas redes</div>
-          <p class="tl-desc">Espelho bonito, luz suave, tecidos, café, detalhes refinados do ambiente. A cliente precisa ter vontade de postar "Estou na Lumiar." Bastidores elegantes são marketing orgânico poderoso.</p>
-        </div>
-        <div class="tl-item">
-          <span class="tl-tag">Pós-ensaio</span>
-          <div class="tl-title">Entrega memorável</div>
-          <p class="tl-desc">Apresentação elegante das imagens. Criar expectativa e encantamento antes da revelação. O momento da entrega é parte da experiência — não apenas um arquivo enviado no WhatsApp.</p>
-        </div>
-      </div>
-
-      <div class="divider"></div>
-      <span class="eyebrow">Linguagem de vendas premium</span>
-
-      <div class="swaps">
-        <div class="swap-row"><span class="from">Pacote com 30 fotos e maquiagem inclusa</span><span class="arr">→</span><span class="to">Uma experiência cuidadosamente pensada para que você viva sua maternidade com beleza e significado</span></div>
-        <div class="swap-row"><span class="from">Temos vagas disponíveis</span><span class="arr">→</span><span class="to">Agenda exclusiva para experiências de maternidade</span></div>
-        <div class="swap-row"><span class="from">Últimas vagas</span><span class="arr">→</span><span class="to">A Lumiar atende um número limitado de experiências por mês</span></div>
-      </div>
-
-      <div class="quote">"A comunicação da Lumiar precisa fazer a mulher pensar: eu não quero apenas fotos. Eu quero viver essa experiência."</div>
-
-      <div class="divider"></div>
-      <span class="eyebrow">Como criar status social</span>
-      <div class="cards">
-        <div class="card"><span class="card-num">01</span><h4>Bastidores refinados</h4><p>Espelho, luz suave, tecidos, café, detalhes, direção elegante — tudo esteticamente cuidado.</p></div>
-        <div class="card"><span class="card-num">02</span><h4>Escassez elegante</h4><p>Nunca "últimas vagas". Sempre comunicar exclusividade sem desespero.</p></div>
-        <div class="card"><span class="card-num">03</span><h4>Cenário desejável</h4><p>A cliente precisa querer mostrar que está na Lumiar antes mesmo de ver as fotos prontas.</p></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══ DIGITAL ══ -->
-  <div class="screen" id="screen-digital">
-    <div class="section-wrap">
-      <span class="eyebrow">05 · Presença Digital</span>
-      <h2 class="h1">Menos quantidade.<br><em>Mais impacto.</em></h2>
-      <div class="subtitle">30 dias · Manutenção contínua</div>
-      <p class="body-text">A estratégia digital da Lumiar não busca viralizar. Busca construir uma percepção de marca premium — onde cada post parece uma campanha, não um conteúdo de preenchimento.</p>
-
-      <span class="eyebrow">Grade editorial semanal</span>
-      <div class="week-grid">
-        <div class="week-card">
-          <span class="week-day">Segunda</span>
-          <h4>Reels cinematográfico</h4>
-          <p>Emoção, close, tecido, luz. Música emocional, câmera lenta, texto mínimo. Legenda profunda.</p>
-        </div>
-        <div class="week-card">
-          <span class="week-day">Terça</span>
-          <h4>Carrossel emocional</h4>
-          <p>Tema: maternidade, autoestima, feminilidade, memória. Conteúdo que a mulher se reconhece.</p>
-        </div>
-        <div class="week-card">
-          <span class="week-day">Quarta</span>
-          <h4>Bastidores premium</h4>
-          <p>Preparação, atendimento, detalhes do estúdio. Refinado, nunca improvisado.</p>
-        </div>
-        <div class="week-card">
-          <span class="week-day">Quinta</span>
-          <h4>Foto editorial</h4>
-          <p>Imagem impactante. Pouco texto. A imagem fala. Deixar respirar.</p>
-        </div>
-        <div class="week-card">
-          <span class="week-day">Sexta</span>
-          <h4>Depoimento real</h4>
-          <p>Vídeo genuíno de cliente. Emoção, reação, experiência. Prova social autêntica.</p>
-        </div>
-        <div class="week-card">
-          <span class="week-day">Sábado</span>
-          <h4>Storytelling</h4>
-          <p>A história da cliente contada com elegância. A mulher, a espera, a transformação.</p>
-        </div>
-      </div>
-
-      <div class="divider"></div>
-      <span class="eyebrow">Campanhas temáticas</span>
-      <div class="tags">
-        <span class="tag">A Beleza da Espera</span>
-        <span class="tag">Ela Floresce</span>
-        <span class="tag">Antes de nascer, já existe amor</span>
-        <span class="tag">A mulher que ela se tornou</span>
-        <span class="tag">O tempo passa. O retrato permanece.</span>
-        <span class="tag">Mães Lumiar</span>
-      </div>
-
-      <div class="divider"></div>
-      <span class="eyebrow">Estrutura de Reels premium</span>
-      <div class="timeline">
-        <div class="tl-item"><span class="tl-tag">1</span><div class="tl-title">Cena lenta</div><p class="tl-desc">Abertura com câmera lenta. Tecido, luz, detalhe.</p></div>
-        <div class="tl-item"><span class="tl-tag">2</span><div class="tl-title">Música emocional</div><p class="tl-desc">Som que cria sentimento antes das imagens.</p></div>
-        <div class="tl-item"><span class="tl-tag">3</span><div class="tl-title">Close emocional</div><p class="tl-desc">Olhar, mãos, barriga, expressão genuína.</p></div>
-        <div class="tl-item"><span class="tl-tag">4</span><div class="tl-title">Texto mínimo</div><p class="tl-desc">Uma frase. Elegante. Tipografia fina.</p></div>
-        <div class="tl-item"><span class="tl-tag">5</span><div class="tl-title">Final elegante</div><p class="tl-desc">Logo sutil. Sem call to action agressivo.</p></div>
-      </div>
-
-      <div class="divider"></div>
-      <span class="eyebrow">Parcerias estratégicas</span>
-      <div class="cards">
-        <div class="card"><span class="card-num">01</span><h4>Obstetras & Clínicas</h4><p>Indicação mútua. Material elegante nos consultórios.</p></div>
-        <div class="card"><span class="card-num">02</span><h4>Maquiagem & Estética</h4><p>Pacote conjunto. A experiência começa na maquiagem.</p></div>
-        <div class="card"><span class="card-num">03</span><h4>Moda Gestante</h4><p>Troca de visibilidade e co-criação de conteúdo.</p></div>
-        <div class="card"><span class="card-num">04</span><h4>Influenciadoras Locais</h4><p>Conteúdo orgânico e autoridade social em Guaíra.</p></div>
-        <div class="card"><span class="card-num">05</span><h4>Lojas Femininas</h4><p>Presença onde a cliente ideal já está.</p></div>
-        <div class="card"><span class="card-num">06</span><h4>Editorial Autoral</h4><p>Ensaios conceituais próprios. Posicionamento artístico.</p></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══ CRONOGRAMA + CHECKLIST ══ -->
-  <div class="screen" id="screen-agenda">
-    <div class="section-wrap">
-      <span class="eyebrow">07 · Cronograma de Execução</span>
-      <h2 class="h1">12 meses para<br>uma marca <em>inesquecível.</em></h2>
-      <div class="subtitle">Marque as tarefas conforme for executando</div>
-
-      <div class="metrics">
-        <div class="metric"><span class="metric-n">7</span><span class="metric-l">Dias · Limpeza</span></div>
-        <div class="metric"><span class="metric-n">90</span><span class="metric-l">Dias · Premium</span></div>
-        <div class="metric"><span class="metric-n">12</span><span class="metric-l">Meses · Regional</span></div>
-      </div>
-
-      <span class="eyebrow">Dias 1–7 · Limpeza de posicionamento</span>
-      <div class="checklist" id="check-fase1">
-        <div class="check-item" data-id="c1"><div class="check-box"><span class="check-tick">✓</span></div><div><div class="check-label">Atualizar bio do Instagram</div><div class="check-sub">Novo texto premium com identidade da Lumiar</div></div></div>
-        <div class="check-item" data-id="c2"><div class="check-box"><span class="check-tick">✓</span></div><div><div class="check-label">Arquivar posts fracos/off-brand</div><div class="check-sub">Promoções, artes poluídas, imagens abaixo do padrão</div></div></div>
-        <div class="check-item" data-id="c3"><div class="check-box"><span class="check-tick">✓</span></div><div><div class="check-label">Reestruturar destaques</div><div class="check-sub">Experiência · Gestantes · Bastidores · Depoimentos · Lumiar</div></div></div>
-        <div class="check-item" data-id="c4"><div class="check-box"><span class="check-tick">✓</span></div><div><div class="check-label">Aplicar novo vocabulário</div><div class="check-sub">Eliminar: ensaio, pacote, fotos, sessãozinha</div></div></div>
-        <div class="check-item" data-id="c5"><div class="check-box"><span class="check-tick">✓</span></div><div><div class="check-label">Revisar linguagem do WhatsApp</div><div class="check-sub">Tom refinado em todas as mensagens de atendimento</div></div></div>
-      </div>
-
-      <span class="eyebrow">Dias 8–15 · Assinatura visual</span>
-      <div class="checklist">
-        <div class="check-item" data-id="c6"><div class="check-box"><span class="check-tick">✓</span></div><div><div class="check-label">Definir paleta de cores oficial</div><div class="check-sub">Preto · Branco · Dourado · Bege · Tons quentes</div></div></div>
-        <div class="check-item" data-id="c7"><div class="check-box"><span class="check-tick">✓</span></div><div><div class="check-label">Padronizar edição das fotos</div><div class="check-sub">Criar preset/LUT de referência da Lumiar</div></div></div>
-        <div class="check-item" data-id="c8"><div class="check-box"><span class="check-tick">✓</span></div><div><div class="check-label">Definir tipografia para artes</div><div class="check-sub">Fonte fina, espaço negativo, pouco texto</div></div></div>
-        <div class="check-item" data-id="c9"><div class="check-box"><span class="check-tick">✓</span></div><div><div class="check-label">Criar referência visual interna</div><div class="check-sub">Moodboard com exemplos do padrão Lumiar</div></div></div>
-      </div>
-
-      <span class="eyebrow">Dias 16–30 · Primeira campanha</span>
-      <div class="checklist">
-        <div class="check-item" data-id="c10"><div class="check-box"><span class="check-tick">✓</span></div><div><div class="check-label">Planejar campanha "A Beleza da Espera"</div><div class="check-sub">7 dias de conteúdo narrativo sobre maternidade</div></div></div>
-        <div class="check-item" data-id="c11"><div class="check-box"><span class="check-tick">✓</span></div><div><div class="check-label">Gravar primeiro Reels cinematográfico</div><div class="check-sub">Câmera lenta, música emocional, close, luz suave</div></div></div>
-        <div class="check-item" data-id="c12"><div class="check-box"><span class="check-tick">✓</span></div><div><div class="check-label">Publicar carrossel emocional</div><div class="check-sub">Tema: a transformação da mulher na maternidade</div></div></div>
-        <div class="check-item" data-id="c13"><div class="check-box"><span class="check-tick">✓</span></div><div><div class="check-label">Publicar bastidores refinados</div><div class="check-sub">Tecidos, luz, preparação — nada improvisado</div></div></div>
-      </div>
-
-      <span class="eyebrow">Dias 31–60 · Construção de autoridade</span>
-      <div class="checklist">
-        <div class="check-item" data-id="c14"><div class="check-box"><span class="check-tick">✓</span></div><div><div class="check-label">Grade editorial 70/30 em execução</div><div class="check-sub">70% feminino/gestante · 30% outros</div></div></div>
-        <div class="check-item" data-id="c15"><div class="check-box"><span class="check-tick">✓</span></div><div><div class="check-label">Reels cinematográfico semanal</div><div class="check-sub">Todo lune, consistência é chave</div></div></div>
-        <div class="check-item" data-id="c16"><div class="check-box"><span class="check-tick">✓</span></div><div><div class="check-label">Iniciar primeiras parcerias locais</div><div class="check-sub">Obstetra ou clínica · Maquiadora premium</div></div></div>
-        <div class="check-item" data-id="c17"><div class="check-box"><span class="check-tick">✓</span></div><div><div class="check-label">Coletar 3 depoimentos em vídeo</div><div class="check-sub">Emoção genuína, não texto decorado</div></div></div>
-      </div>
-
-      <span class="eyebrow">Dias 61–90 · Experiência premium</span>
-      <div class="checklist">
-        <div class="check-item" data-id="c18"><div class="check-box"><span class="check-tick">✓</span></div><div><div class="check-label">Criar guia de figurino para clientes</div><div class="check-sub">Cores, tecidos, acessórios — PDF elegante</div></div></div>
-        <div class="check-item" data-id="c19"><div class="check-box"><span class="check-tick">✓</span></div><div><div class="check-label">Estruturar fluxo de áudio no WhatsApp</div><div class="check-sub">Tom humanizado, acolhedor e sofisticado</div></div></div>
-        <div class="check-item" data-id="c20"><div class="check-box"><span class="check-tick">✓</span></div><div><div class="check-label">Refinar cenário e ambiente do estúdio</div><div class="check-sub">Espelho, luz, café, tecidos — bastidores desejáveis</div></div></div>
-        <div class="check-item" data-id="c21"><div class="check-box"><span class="check-tick">✓</span></div><div><div class="check-label">Criar ritual de entrega das imagens</div><div class="check-sub">Apresentação elegante, não apenas "arquivo enviado"</div></div></div>
-      </div>
-
-      <span class="eyebrow">Meses 4–6 · Status e desejo social</span>
-      <div class="checklist">
-        <div class="check-item" data-id="c22"><div class="check-box"><span class="check-tick">✓</span></div><div><div class="check-label">Lançar campanha "Mães Lumiar"</div><div class="check-sub">Mulheres influentes da cidade como protagonistas</div></div></div>
-        <div class="check-item" data-id="c23"><div class="check-box"><span class="check-tick">✓</span></div><div><div class="check-label">Publicar 3 editorials autorais</div><div class="check-sub">Ensaios conceituais sem cliente pagante</div></div></div>
-        <div class="check-item" data-id="c24"><div class="check-box"><span class="check-tick">✓</span></div><div><div class="check-label">Expandir rede de parcerias</div><div class="check-sub">Moda gestante · Lojas femininas · Estética</div></div></div>
-      </div>
-
-      <span class="eyebrow">Meses 7–12 · Dominação regional</span>
-      <div class="checklist">
-        <div class="check-item" data-id="c25"><div class="check-box"><span class="check-tick">✓</span></div><div><div class="check-label">Elevar ticket médio com segurança</div><div class="check-sub">Só após branding e percepção consolidados</div></div></div>
-        <div class="check-item" data-id="c26"><div class="check-box"><span class="check-tick">✓</span></div><div><div class="check-label">Criar coleção editorial anual Lumiar</div><div class="check-sub">Projeto artístico que define o padrão estético do ano</div></div></div>
-        <div class="check-item" data-id="c27"><div class="check-box"><span class="check-tick">✓</span></div><div><div class="check-label">Tornar-se referência regional comprovada</div><div class="check-sub">Clientes de outras cidades buscando a Lumiar</div></div></div>
-      </div>
-
-      <div class="res-box" style="margin-top:32px">
-        <h3>Em 12 meses, a Lumiar<br>constrói uma marca<br><em style="color:var(--gl);font-style:italic">emocionalmente desejada.</em></h3>
-        <p style="margin-top:16px">Marcas desejadas cobram mais, atraem melhores clientes, geram indicação orgânica e dominam o mercado local com autoridade genuína.</p>
-      </div>
-    </div>
-  </div>
-
+<main id="main" style="flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;position:relative">
+  <div style="position:absolute;top:0;left:0;right:0;height:280px;pointer-events:none;background:radial-gradient(ellipse at 50% 0%,rgba(184,151,74,0.10),transparent 70%)"></div>
+  <div id="screen-content"></div>
 </main>
 
+<!-- BOTTOM NAV -->
+<nav id="bottom-nav" style="flex:none;z-index:5;display:grid;grid-template-columns:repeat(5,1fr);background:rgba(10,10,10,0.96);backdrop-filter:blur(14px);border-top:1px solid rgba(184,151,74,0.16);padding-bottom:env(safe-area-inset-bottom,0px)">
+  <button onclick="App.go('home')" id="nav-home" style="min-height:58px;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:#b8974a;cursor:pointer;transition:color .25s ease">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M4 11l8-6.5 8 6.5v8a1 1 0 01-1 1h-4v-6H9v6H5a1 1 0 01-1-1z"/></svg>
+    <span style="font-family:Montserrat,sans-serif;font-size:7.5px;letter-spacing:1.6px;text-transform:uppercase">Início</span>
+  </button>
+  <button onclick="App.go('fases')" id="nav-fases" style="min-height:58px;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:rgba(240,235,224,0.34);cursor:pointer;transition:color .25s ease">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+    <span style="font-family:Montserrat,sans-serif;font-size:7.5px;letter-spacing:1.6px;text-transform:uppercase">Fases</span>
+  </button>
+  <button onclick="App.go('tarefas')" id="nav-tarefas" style="min-height:58px;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:rgba(240,235,224,0.34);cursor:pointer;transition:color .25s ease">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M4 7.5l2.5 2.5L11 5"/><path d="M4 17.5L6.5 20 11 15"/><path d="M14 8h6M14 18h6"/></svg>
+    <span style="font-family:Montserrat,sans-serif;font-size:7.5px;letter-spacing:1.6px;text-transform:uppercase">Tarefas</span>
+  </button>
+  <button onclick="App.go('marca')" id="nav-marca" style="min-height:58px;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:rgba(240,235,224,0.34);cursor:pointer;transition:color .25s ease">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.6"/></svg>
+    <span style="font-family:Montserrat,sans-serif;font-size:7.5px;letter-spacing:1.6px;text-transform:uppercase">Marca</span>
+  </button>
+  <button onclick="App.go('perfil')" id="nav-perfil" style="min-height:58px;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:rgba(240,235,224,0.34);cursor:pointer;transition:color .25s ease">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="12" cy="8.5" r="3.6"/><path d="M5 20c0-3.6 3.1-5.5 7-5.5s7 1.9 7 5.5"/></svg>
+    <span style="font-family:Montserrat,sans-serif;font-size:7.5px;letter-spacing:1.6px;text-transform:uppercase">Perfil</span>
+  </button>
+</nav>
+
 <script>
-// ── TABS ──
-const tabs = document.querySelectorAll('.tab');
-const screens = document.querySelectorAll('.screen');
+// ════════════════════════════════════════
+// DATA
+// ════════════════════════════════════════
+const GOLD = '#b8974a';
+const KEY = 'lumiar.plano.done.v1';
+const TAB_KEY = 'lumiar.tab.v1';
+const PHASE_KEY = 'lumiar.phase.v1';
 
-function goTo(id) {
-  tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === id));
-  screens.forEach(s => s.classList.toggle('active', s.id === 'screen-' + id));
-  document.querySelector('.main').scrollTop = 0;
-  saveTab(id);
-}
+const PHASES = [
+  { num:'01', label:'Fundação da identidade', period:'Dias 1–30',
+    intro:'Antes de mudar qualquer imagem, definimos quem a Lumiar é quando ninguém está olhando. Os pilares aqui decidem preço, agenda e enquadramento pelos próximos doze meses.',
+    quote:'Marca premium não é a que cobra mais. É a que consegue dizer não.',
+    result:'Um documento de marca de uma página que decide, sozinho, o que o estúdio aceita fotografar, quanto cobra e como responde.',
+    tasks:[
+      {t:'Escrever o manifesto da marca em uma página',n:'Posicionamento, cliente ideal e o que a Lumiar recusa.'},
+      {t:'Definir os quatro pilares visuais e emocionais',n:'Sofisticação silenciosa, feminilidade, maternidade autoral, exclusividade.'},
+      {t:'Mapear as três clientes-alvo com nome e história',n:'Idade, momento de vida, o que ela busca no retrato.'},
+      {t:'Listar o que sai do portfólio',n:'Todo trabalho que não sustenta o novo posicionamento.'}]},
+  { num:'02', label:'Nova linguagem', period:'Dias 20–45',
+    intro:'A palavra vem antes da imagem. Trocar o vocabulário do estúdio muda a percepção de valor antes de qualquer mudança estética — e custa zero.',
+    quote:'Quem explica demais está pedindo permissão. A Lumiar apenas convida.',
+    result:'Guia de vocabulário aplicado a site, WhatsApp, legendas e contrato. A mesma sessão passa a ser percebida duas categorias acima.',
+    tasks:[
+      {t:'Aplicar a tabela de trocas em todos os canais',n:'Site, Instagram, WhatsApp e contrato na mesma linguagem.'},
+      {t:'Reescrever as respostas prontas do WhatsApp',n:'Cinco mensagens-padrão: primeiro contato, valor, agenda, entrega, pós.'},
+      {t:'Criar a apresentação verbal do estúdio',n:'Três frases que explicam a Lumiar sem falar de equipamento.'}]},
+  { num:'03', label:'Código visual', period:'Dias 30–60',
+    intro:'Uma assinatura reconhecível a três metros de distância: luz baixa, pele quente, gesto contido. Repetição é o que transforma estilo em marca.',
+    quote:'Assinatura não é o que você sabe fazer. É o que você repete.',
+    result:'Preset único, três cenários fixos e um padrão de entrega de 25 imagens que qualquer pessoa reconhece como Lumiar.',
+    tasks:[
+      {t:'Fechar um preset autoral único',n:'Grão fino, preto suave, zero clareamento de pele.'},
+      {t:'Definir três cenários fixos de estúdio',n:'Luz de janela, fundo neutro, tecido em movimento.'},
+      {t:'Refazer o portfólio com 25 imagens',n:'Somente trabalho que representa o novo padrão.'},
+      {t:'Criar o guia de poses de gesto contido',n:'Referências impressas para usar durante a sessão.'}]},
+  { num:'04', label:'Experiência da cliente', period:'Dias 45–90',
+    intro:'O que se cobra por uma experiência premium se justifica antes e depois do clique. A jornada tem sete pontos de contato — nenhum deles improvisado.',
+    quote:'A cliente não lembra das fotos. Lembra de como se sentiu ao ser fotografada.',
+    result:'Jornada documentada do primeiro contato à revelação, com rituais fixos que sustentam o preço praticado.',
+    tasks:[
+      {t:'Desenhar a jornada em sete pontos de contato',n:'Do primeiro contato à revelação das imagens.'},
+      {t:'Criar o ritual de recepção no estúdio',n:'Chá, música, espelho, tempo de conversa antes da câmera.'},
+      {t:'Montar a consultoria de styling pré-sessão',n:'Chamada de 20 minutos sobre roupa, cabelo e referências.'},
+      {t:'Definir o momento da revelação',n:'Apresentação presencial das imagens, nunca por link cru.'}]},
+  { num:'05', label:'Presença digital', period:'Meses 3–6',
+    intro:'O digital não vende a sessão: ele confirma o preço. Cada peça publicada precisa parecer editorial, nunca anúncio.',
+    quote:'Um feed premium é feito de ausências. O que não se publica também comunica.',
+    result:'Instagram e site editoriais, com ritmo semanal fixo e zero linguagem promocional.',
+    tasks:[
+      {t:'Reformular o feed em grade editorial',n:'Três colunas com respiro: retrato, detalhe, texto.'},
+      {t:'Definir a grade semanal de publicação',n:'Dois posts autorais, um bastidor, um depoimento.'},
+      {t:'Publicar o site de página única',n:'Portfólio, experiência, investimento e convite.'},
+      {t:'Encerrar toda comunicação promocional',n:'Sem cupom, contagem regressiva ou preço em destaque.'}]},
+  { num:'06', label:'Precificação e oferta', period:'Meses 6–9',
+    intro:'Com identidade, linguagem, visual e experiência no lugar, o preço deixa de ser negociação e passa a ser consequência.',
+    quote:'Preço é o último ajuste. Antes dele, tudo precisa já parecer caro.',
+    result:'Três experiências com preços definidos, agenda limitada e taxa de fechamento acompanhada mês a mês.',
+    tasks:[
+      {t:'Estruturar três experiências, não pacotes',n:'Essência, Autoral e Maternidade Fine Art.'},
+      {t:'Reajustar valores em duas etapas',n:'Aumento gradual com comunicação clara às clientes antigas.'},
+      {t:'Limitar a agenda a oito sessões por mês',n:'Escassez real, sustentada por capacidade de edição.'},
+      {t:'Criar a política de contrato e remarcação',n:'Termos claros, sinal de reserva e prazos de entrega.'}]},
+  { num:'07', label:'Consolidação', period:'Meses 9–12',
+    intro:'A marca sustentada por sistema, não por esforço. Nesta fase os padrões viram rotina e o crescimento passa a vir por indicação.',
+    quote:'Marca consolidada é aquela que continua igual quando ninguém está cobrando.',
+    result:'Estúdio operando com padrões documentados, indicações constantes e um projeto autoral anual como vitrine.',
+    tasks:[
+      {t:'Documentar todos os padrões em um manual',n:'Atendimento, sessão, edição, entrega e pós-venda.'},
+      {t:'Criar o programa de indicação silencioso',n:'Convite pessoal, sem premiação comercial explícita.'},
+      {t:'Produzir um projeto autoral anual',n:'Série fotográfica exposta, sem finalidade comercial direta.'},
+      {t:'Revisar os doze meses e planejar o próximo ciclo',n:'Números, aprendizados e próximos limites.'}]}
+];
 
-tabs.forEach(t => t.addEventListener('click', () => goTo(t.dataset.tab)));
+const SWAPS = [
+  {from:'Pacote de fotos',to:'Experiência'},
+  {from:'Cliente',to:'Retratada'},
+  {from:'Ensaio',to:'Sessão autoral'},
+  {from:'Promoção',to:'Convite'},
+  {from:'Orçamento',to:'Investimento'},
+  {from:'Entrega das fotos',to:'Revelação'}
+];
 
-// Shortcut cards on home
-document.querySelectorAll('[data-goto]').forEach(el => {
-  el.addEventListener('click', () => goTo(el.dataset.goto));
-});
+const TONE = ['Frases curtas','Sem emoji','Primeira pessoa','Nunca urgência','Convite','Silêncio'];
 
-// ── CHECKLIST ──
-const STORAGE_KEY = 'lumiar_checks_v2';
+// ════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════
+const App = {
+  state: {
+    tab: 'home',
+    phaseIdx: 0,
+    filter: 'pendentes',
+    done: {}
+  },
 
-function loadChecks() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
-  catch { return {}; }
-}
+  init() {
+    // Load persisted data
+    try {
+      const raw = localStorage.getItem(KEY);
+      if (raw) this.state.done = JSON.parse(raw) || {};
+    } catch(e){}
+    try {
+      const tab = localStorage.getItem(TAB_KEY);
+      if (tab && ['home','fases','tarefas','marca','perfil'].includes(tab)) this.state.tab = tab;
+    } catch(e){}
+    try {
+      const pi = parseInt(localStorage.getItem(PHASE_KEY));
+      if (!isNaN(pi) && pi >= 0 && pi < PHASES.length) this.state.phaseIdx = pi;
+    } catch(e){}
+    this.render();
+  },
 
-function saveChecks(data) {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch {}
-}
+  persist() {
+    try { localStorage.setItem(KEY, JSON.stringify(this.state.done)); } catch(e){}
+    try { localStorage.setItem(TAB_KEY, this.state.tab); } catch(e){}
+    try { localStorage.setItem(PHASE_KEY, this.state.phaseIdx); } catch(e){}
+  },
 
-function saveTab(id) {
-  try { localStorage.setItem('lumiar_tab', id); } catch {}
-}
+  toggle(id) {
+    if (this.state.done[id]) delete this.state.done[id];
+    else this.state.done[id] = true;
+    this.persist();
+    this.render();
+  },
 
-function loadTab() {
-  try { return localStorage.getItem('lumiar_tab') || 'home'; } catch { return 'home'; }
-}
+  go(tab) {
+    this.state.tab = tab;
+    this.persist();
+    this.render();
+    requestAnimationFrame(() => { document.getElementById('main').scrollTop = 0; });
+  },
 
-function updateProgress() {
-  const items = document.querySelectorAll('.check-item');
-  const done = document.querySelectorAll('.check-item.done');
-  const pct = items.length ? Math.round((done.length / items.length) * 100) : 0;
-  const offset = 188 - (188 * pct / 100);
-  document.getElementById('ring-circle').style.strokeDashoffset = offset;
-  document.getElementById('ring-text').textContent = pct + '%';
-  document.getElementById('pct-hdr').textContent = pct + '%';
-}
+  openPhase(i) {
+    this.state.phaseIdx = i;
+    this.state.tab = 'fase';
+    this.persist();
+    this.render();
+    requestAnimationFrame(() => { document.getElementById('main').scrollTop = 0; });
+  },
 
-const checks = loadChecks();
+  setFilter(f) {
+    this.state.filter = f;
+    this.render();
+  },
 
-document.querySelectorAll('.check-item').forEach(item => {
-  const id = item.dataset.id;
-  if (checks[id]) item.classList.add('done');
+  resetAll() {
+    if (!confirm('Zerar todo o progresso?')) return;
+    this.state.done = {};
+    this.persist();
+    this.render();
+  },
 
-  item.addEventListener('click', () => {
-    item.classList.toggle('done');
-    checks[id] = item.classList.contains('done');
-    saveChecks(checks);
-    updateProgress();
-  });
-});
+  // ── COMPUTED ──
+  allTasks() {
+    const out = [];
+    PHASES.forEach((p,pi) => p.tasks.forEach((t,ti) => {
+      out.push({id: p.num+'-'+ti, title: t.t, note: t.n, phaseLabel: 'Fase '+p.num+' · '+p.label, phaseIdx: pi});
+    }));
+    return out;
+  },
 
-updateProgress();
+  stats() {
+    const all = this.allTasks();
+    const doneCount = all.filter(t => this.state.done[t.id]).length;
+    const total = all.length;
+    const pct = total ? Math.round((doneCount/total)*100) : 0;
+    return {all, doneCount, total, pct, pending: total-doneCount};
+  },
 
-// Restore last tab
-const lastTab = loadTab();
-goTo(lastTab);
+  // ── RENDER ──
+  render() {
+    const s = this.state;
+    const {all, doneCount, total, pct, pending} = this.stats();
 
-// PWA manifest
+    // Update header subtitle
+    const subs = {home:'Plano de elevação · 12 meses', fases:'Sete fases', fase:'Fase '+PHASES[s.phaseIdx].num, tarefas:'Checklist do plano', marca:'Kit de marca', perfil:'Estúdio'};
+    document.getElementById('hdr-sub').textContent = subs[s.tab] || '';
+
+    // Back button (only on fase)
+    const backBtn = document.getElementById('btn-back');
+    backBtn.style.display = s.tab === 'fase' ? 'flex' : 'none';
+
+    // Nav colors
+    const INACTIVE = 'rgba(240,235,224,0.34)';
+    document.getElementById('nav-home').style.color = s.tab==='home' ? GOLD : INACTIVE;
+    document.getElementById('nav-fases').style.color = (s.tab==='fases'||s.tab==='fase') ? GOLD : INACTIVE;
+    document.getElementById('nav-tarefas').style.color = s.tab==='tarefas' ? GOLD : INACTIVE;
+    document.getElementById('nav-marca').style.color = s.tab==='marca' ? GOLD : INACTIVE;
+    document.getElementById('nav-perfil').style.color = s.tab==='perfil' ? GOLD : INACTIVE;
+
+    // Render screen
+    const content = document.getElementById('screen-content');
+    const prev = content.querySelector('section');
+    const sec = document.createElement('section');
+    sec.style.cssText = 'position:relative;animation:lmIn .28s ease both;display:flex;flex-direction:column';
+
+    if (s.tab === 'home') sec.innerHTML = this.renderHome(doneCount, total, pct, pending, all);
+    else if (s.tab === 'fases') sec.innerHTML = this.renderFases();
+    else if (s.tab === 'fase') sec.innerHTML = this.renderFase(s.phaseIdx);
+    else if (s.tab === 'tarefas') sec.innerHTML = this.renderTarefas(all, doneCount, pending);
+    else if (s.tab === 'marca') sec.innerHTML = this.renderMarca();
+    else if (s.tab === 'perfil') sec.innerHTML = this.renderPerfil(pct, doneCount);
+
+    if (prev) content.removeChild(prev);
+    content.appendChild(sec);
+  },
+
+  // ── SCREENS ──
+  renderHome(doneCount, total, pct, pending, all) {
+    const r = 34, len = 2 * Math.PI * r;
+    const offset = len * (1 - pct/100);
+    const next = all.find(t => !this.state.done[t.id]);
+    const activePhase = next ? PHASES[next.phaseIdx] : null;
+    const phaseStatus = activePhase ? 'Em curso: fase '+activePhase.num+' · '+activePhase.period : 'Todas as fases concluídas';
+
+    const phaseCardsHtml = PHASES.map((p,i) => {
+      const d = p.tasks.filter((t,ti) => this.state.done[p.num+'-'+ti]).length;
+      const w = Math.round((d/p.tasks.length)*100)+'%';
+      return `<button onclick="App.openPhase(${i})" style="flex:none;width:150px;padding:16px 15px;border:1px solid rgba(184,151,74,0.18);border-radius:14px;background:#111111;display:flex;flex-direction:column;gap:10px;text-align:left;cursor:pointer;transition:background .2s ease">
+        <span style="font-family:'Cormorant Garamond',serif;font-size:11px;color:#b8974a;letter-spacing:1px">${p.num}</span>
+        <span style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300;color:#f0ebe0;line-height:1.15;min-height:42px">${p.label}</span>
+        <span style="display:block;width:100%;height:2px;border-radius:2px;background:rgba(184,151,74,0.16);overflow:hidden"><span style="display:block;height:2px;background:#b8974a;border-radius:2px;width:${w};transition:width .4s ease"></span></span>
+        <span style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(240,235,224,0.38)">${d}/${p.tasks.length}</span>
+      </button>`;
+    }).join('');
+
+    const nextHtml = next ? `
+      <div style="padding:16px 16px 14px;border:1px solid rgba(184,151,74,0.18);border-radius:14px;background:#111111;display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <span style="font-size:8px;letter-spacing:2.6px;text-transform:uppercase;color:#b8974a">${next.phaseLabel}</span>
+          <span style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;line-height:1.25;color:#f0ebe0">${next.title}</span>
+          <span style="font-size:10.5px;font-weight:300;line-height:1.6;color:rgba(240,235,224,0.5)">${next.note}</span>
+        </div>
+        <div style="display:flex;gap:9px">
+          <button onclick="App.toggle('${next.id}')" style="flex:1;min-height:44px;border:1px solid #b8974a;border-radius:10px;background:rgba(184,151,74,0.1);color:#f0ebe0;font-family:Montserrat,sans-serif;font-size:9px;font-weight:400;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:background .2s ease">Marcar concluída</button>
+          <button onclick="App.openPhase(${next.phaseIdx})" style="flex:none;min-height:44px;padding:0 16px;border:1px solid rgba(184,151,74,0.22);border-radius:10px;background:transparent;color:rgba(240,235,224,0.7);font-family:Montserrat,sans-serif;font-size:9px;font-weight:300;letter-spacing:2px;text-transform:uppercase;cursor:pointer">Abrir fase</button>
+        </div>
+      </div>` :
+      `<div style="padding:22px 18px;border:1px solid rgba(184,151,74,0.4);border-radius:14px;background:radial-gradient(circle at 20% 0%,rgba(184,151,74,0.08),transparent 70%)">
+        <span style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:21px;font-weight:300;color:#f0ebe0;display:block;margin-bottom:8px">Plano concluído.</span>
+        <span style="font-size:10.5px;font-weight:300;line-height:1.6;color:rgba(240,235,224,0.55)">Os doze meses foram cumpridos. Reabra qualquer fase para revisar padrões.</span>
+      </div>`;
+
+    return `<div style="padding:22px 18px 26px;display:flex;flex-direction:column;gap:18px">
+      <div>
+        <div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(240,235,224,0.34)">Guaíra · SP</div>
+        <h1 style="margin:8px 0 0;font-family:'Cormorant Garamond',serif;font-weight:300;font-size:30px;line-height:1.12;color:#f0ebe0">Plano de <em style="font-style:italic;color:#b8974a">Elevação</em> de Marca</h1>
+      </div>
+
+      <div style="padding:20px;border:1px solid rgba(184,151,74,0.2);border-radius:16px;background:linear-gradient(150deg,#141210,#0e0d0c);display:flex;flex-direction:column;gap:18px">
+        <div style="display:flex;align-items:center;gap:18px">
+          <div style="flex:none;position:relative;width:76px;height:76px;display:flex;align-items:center;justify-content:center">
+            <svg width="76" height="76" viewBox="0 0 76 76" style="position:absolute;inset:0;transform:rotate(-90deg)">
+              <circle cx="38" cy="38" r="${r}" fill="none" stroke="rgba(184,151,74,0.16)" stroke-width="2"/>
+              <circle cx="38" cy="38" r="${r}" fill="none" stroke="#b8974a" stroke-width="2" stroke-linecap="round" stroke-dasharray="${len.toFixed(2)}" stroke-dashoffset="${offset.toFixed(2)}" style="transition:stroke-dashoffset .5s ease"/>
+            </svg>
+            <span style="font-family:'Cormorant Garamond',serif;font-size:23px;font-weight:300;color:#f0ebe0">${pct}%</span>
+          </div>
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:6px">
+            <span style="font-size:8.5px;letter-spacing:2.8px;text-transform:uppercase;color:rgba(240,235,224,0.34)">Progresso geral</span>
+            <span style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;color:#f0ebe0;line-height:1.2">${doneCount} de ${total} tarefas</span>
+            <span style="font-size:10px;font-weight:300;color:rgba(240,235,224,0.5)">${phaseStatus}</span>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px">
+          <button onclick="App.go('tarefas')" style="flex:1;min-height:46px;border:0;border-radius:10px;background:#b8974a;color:#0a0a0a;font-family:Montserrat,sans-serif;font-size:9.5px;font-weight:500;letter-spacing:2.2px;text-transform:uppercase;cursor:pointer;transition:background .2s ease">Continuar plano</button>
+          <button onclick="App.go('fases')" style="flex:none;min-height:46px;padding:0 18px;border:1px solid rgba(184,151,74,0.3);border-radius:10px;background:transparent;color:#f0ebe0;font-family:Montserrat,sans-serif;font-size:9.5px;font-weight:300;letter-spacing:2.2px;text-transform:uppercase;cursor:pointer">Fases</button>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:baseline;justify-content:space-between">
+          <span style="font-size:8.5px;letter-spacing:2.8px;text-transform:uppercase;color:rgba(240,235,224,0.34)">Próxima ação</span>
+          <button onclick="App.go('tarefas')" style="border:0;background:transparent;padding:6px 0;font-family:Montserrat,sans-serif;font-size:8.5px;letter-spacing:2px;text-transform:uppercase;color:#b8974a;cursor:pointer">Ver todas</button>
+        </div>
+        ${nextHtml}
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:11px">
+        <span style="font-size:8.5px;letter-spacing:2.8px;text-transform:uppercase;color:rgba(240,235,224,0.34)">Fases</span>
+        <div style="display:flex;gap:11px;overflow-x:auto;padding-bottom:4px;margin:0 -18px;padding-left:18px;padding-right:18px">
+          ${phaseCardsHtml}
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:9px">
+        <div style="padding:15px 8px;border:1px solid rgba(184,151,74,0.14);border-radius:12px;background:#111111;display:flex;flex-direction:column;gap:6px;align-items:center">
+          <span style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:#b8974a;line-height:1">7</span>
+          <span style="font-size:7.5px;letter-spacing:2px;text-transform:uppercase;color:rgba(240,235,224,0.4)">Fases</span>
+        </div>
+        <div style="padding:15px 8px;border:1px solid rgba(184,151,74,0.14);border-radius:12px;background:#111111;display:flex;flex-direction:column;gap:6px;align-items:center">
+          <span style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:#b8974a;line-height:1">90</span>
+          <span style="font-size:7.5px;letter-spacing:2px;text-transform:uppercase;color:rgba(240,235,224,0.4)">Dias</span>
+        </div>
+        <div style="padding:15px 8px;border:1px solid rgba(184,151,74,0.14);border-radius:12px;background:#111111;display:flex;flex-direction:column;gap:6px;align-items:center">
+          <span style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:#b8974a;line-height:1">12</span>
+          <span style="font-size:7.5px;letter-spacing:2px;text-transform:uppercase;color:rgba(240,235,224,0.4)">Meses</span>
+        </div>
+      </div>
+    </div>`;
+  },
+
+  renderFases() {
+    const cardsHtml = PHASES.map((p,i) => {
+      const d = p.tasks.filter((t,ti) => this.state.done[p.num+'-'+ti]).length;
+      const w = Math.round((d/p.tasks.length)*100)+'%';
+      return `<button onclick="App.openPhase(${i})" style="width:100%;padding:16px;border:1px solid rgba(184,151,74,0.16);border-radius:14px;background:#111111;display:flex;align-items:center;gap:14px;text-align:left;cursor:pointer;transition:background .2s ease">
+        <span style="flex:none;width:42px;height:42px;border:1px solid rgba(184,151,74,0.28);border-radius:100px;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:15px;color:#b8974a">${p.num}</span>
+        <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:7px">
+          <span style="font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:300;color:#f0ebe0;line-height:1.15">${p.label}</span>
+          <span style="font-size:8.5px;letter-spacing:2px;text-transform:uppercase;color:rgba(240,235,224,0.38)">${p.period} · ${d}/${p.tasks.length}</span>
+          <span style="display:block;width:100%;height:2px;border-radius:2px;background:rgba(184,151,74,0.14)"><span style="display:block;height:2px;background:#b8974a;border-radius:2px;width:${w};transition:width .4s ease"></span></span>
+        </span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#b8974a" stroke-width="1.3" style="flex:none"><path d="M9 5l7 7-7 7"/></svg>
+      </button>`;
+    }).join('');
+
+    return `<div style="padding:22px 18px 26px;display:flex;flex-direction:column;gap:14px">
+      <div>
+        <h1 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:300;font-size:28px;color:#f0ebe0">As sete <em style="font-style:italic;color:#b8974a">fases</em></h1>
+        <p style="margin:9px 0 0;font-size:11px;font-weight:300;line-height:1.7;color:rgba(240,235,224,0.5)">Doze meses divididos em movimentos curtos. Abra uma fase para ver as tarefas e o resultado esperado.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:9px">${cardsHtml}</div>
+    </div>`;
+  },
+
+  renderFase(idx) {
+    const p = PHASES[idx];
+    const curDone = p.tasks.filter((t,ti) => this.state.done[p.num+'-'+ti]).length;
+    const w = Math.round((curDone/p.tasks.length)*100)+'%';
+    const prevIdx = (idx + PHASES.length - 1) % PHASES.length;
+    const nextIdx = (idx + 1) % PHASES.length;
+
+    const tasksHtml = p.tasks.map((t,ti) => {
+      const id = p.num+'-'+ti;
+      const done = !!this.state.done[id];
+      const bg = done ? '#0d0d0d' : '#111111';
+      const boxBg = done ? GOLD : 'transparent';
+      const color = done ? 'rgba(240,235,224,0.4)' : '#f0ebe0';
+      const strike = done ? 'line-through' : 'none';
+      const check = done ? `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#0a0a0a" stroke-width="2.6"><path d="M4 12.5l5.5 5.5L20 6.5"/></svg>` : '';
+      return `<button onclick="App.toggle('${id}')" style="width:100%;min-height:56px;padding:14px 15px;border:1px solid rgba(184,151,74,0.16);border-radius:12px;background:${bg};display:flex;align-items:flex-start;gap:13px;text-align:left;cursor:pointer;transition:background .2s ease">
+        <span style="flex:none;width:20px;height:20px;margin-top:1px;border:1px solid #b8974a;border-radius:5px;display:flex;align-items:center;justify-content:center;background:${boxBg};transition:background .2s ease">${check}</span>
+        <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:5px">
+          <span style="font-family:Montserrat,sans-serif;font-size:12px;font-weight:300;line-height:1.5;color:${color};text-decoration:${strike}">${t.t}</span>
+          <span style="font-size:9.5px;font-weight:300;line-height:1.55;color:rgba(240,235,224,0.38)">${t.n}</span>
+        </span>
+      </button>`;
+    }).join('');
+
+    return `<div style="padding:22px 18px 26px;display:flex;flex-direction:column;gap:20px">
+      <div>
+        <div style="font-size:8.5px;letter-spacing:3.4px;text-transform:uppercase;color:#b8974a">Fase ${p.num} · ${p.period}</div>
+        <h1 style="margin:12px 0 0;font-family:'Cormorant Garamond',serif;font-weight:300;font-size:32px;line-height:1.1;color:#f0ebe0">${p.label}</h1>
+        <p style="margin:14px 0 0;font-size:12.5px;font-weight:300;line-height:1.78;color:rgba(240,235,224,0.68)">${p.intro}</p>
+      </div>
+
+      <div style="padding:14px 16px;border:1px solid rgba(184,151,74,0.18);border-radius:12px;background:#111111;display:flex;align-items:center;gap:14px">
+        <span style="flex:1;display:flex;flex-direction:column;gap:7px">
+          <span style="font-size:8px;letter-spacing:2.6px;text-transform:uppercase;color:rgba(240,235,224,0.34)">Andamento da fase</span>
+          <span style="display:block;width:100%;height:3px;border-radius:3px;background:rgba(184,151,74,0.14)"><span style="display:block;height:3px;background:#b8974a;border-radius:3px;width:${w};transition:width .4s ease"></span></span>
+        </span>
+        <span style="flex:none;font-family:'Cormorant Garamond',serif;font-size:20px;color:#f0ebe0">${curDone}/${p.tasks.length}</span>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:9px">
+        <span style="font-size:8.5px;letter-spacing:2.8px;text-transform:uppercase;color:rgba(240,235,224,0.34)">Tarefas</span>
+        ${tasksHtml}
+      </div>
+
+      <div style="padding:18px 20px;border-left:1px solid #b8974a;background:linear-gradient(to right,rgba(184,151,74,0.05),transparent)">
+        <p style="margin:0;font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;font-size:19px;line-height:1.45;color:#f0ebe0">${p.quote}</p>
+      </div>
+
+      <div style="position:relative;padding:26px 20px 22px;border:1px solid rgba(184,151,74,0.36);border-radius:14px;background:radial-gradient(circle at 20% 0%,rgba(184,151,74,0.07),transparent 70%)">
+        <span style="position:absolute;top:-6px;left:18px;padding:0 8px;background:#0a0a0a;font-size:7.5px;letter-spacing:3.2px;text-transform:uppercase;color:#b8974a">Resultado</span>
+        <p style="margin:0;font-size:11.5px;font-weight:300;line-height:1.8;color:rgba(240,235,224,0.75)">${p.result}</p>
+      </div>
+
+      <div style="display:flex;gap:10px">
+        <button onclick="App.openPhase(${prevIdx})" style="flex:1;min-height:46px;border:1px solid rgba(184,151,74,0.22);border-radius:10px;background:transparent;color:rgba(240,235,224,0.65);font-family:Montserrat,sans-serif;font-size:9px;font-weight:300;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:background .2s ease">Anterior</button>
+        <button onclick="App.openPhase(${nextIdx})" style="flex:1;min-height:46px;border:0;border-radius:10px;background:#b8974a;color:#0a0a0a;font-family:Montserrat,sans-serif;font-size:9px;font-weight:500;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:background .2s ease">Próxima fase</button>
+      </div>
+    </div>`;
+  },
+
+  renderTarefas(all, doneCount, pending) {
+    const s = this.state;
+    const filtered = all.filter(t => s.filter==='todas' ? true : s.filter==='feitas' ? s.done[t.id] : !s.done[t.id]);
+
+    const filtersHtml = [
+      {key:'pendentes',label:'Pendentes'},
+      {key:'todas',label:'Todas'},
+      {key:'feitas',label:'Feitas'}
+    ].map(f => {
+      const active = s.filter === f.key;
+      return `<button onclick="App.setFilter('${f.key}')" style="flex:1;min-height:42px;border:0;border-radius:8px;background:${active?GOLD:'#0f0f0f'};color:${active?'#0a0a0a':'rgba(240,235,224,0.55)'};font-family:Montserrat,sans-serif;font-size:8.5px;font-weight:400;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:background .2s ease">${f.label}</button>`;
+    }).join('');
+
+    const tasksHtml = filtered.map(t => {
+      const done = !!s.done[t.id];
+      const bg = done ? '#0d0d0d' : '#111111';
+      const boxBg = done ? GOLD : 'transparent';
+      const color = done ? 'rgba(240,235,224,0.4)' : '#f0ebe0';
+      const strike = done ? 'line-through' : 'none';
+      const check = done ? `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#0a0a0a" stroke-width="2.6"><path d="M4 12.5l5.5 5.5L20 6.5"/></svg>` : '';
+      return `<button onclick="App.toggle('${t.id}')" style="width:100%;min-height:56px;padding:14px 15px;border:1px solid rgba(184,151,74,0.16);border-radius:12px;background:${bg};display:flex;align-items:flex-start;gap:13px;text-align:left;cursor:pointer;transition:background .2s ease">
+        <span style="flex:none;width:20px;height:20px;margin-top:1px;border:1px solid #b8974a;border-radius:5px;display:flex;align-items:center;justify-content:center;background:${boxBg};transition:background .2s ease">${check}</span>
+        <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:6px">
+          <span style="font-size:7.5px;letter-spacing:2.4px;text-transform:uppercase;color:#b8974a">${t.phaseLabel}</span>
+          <span style="font-size:12px;font-weight:300;line-height:1.5;color:${color};text-decoration:${strike}">${t.title}</span>
+        </span>
+      </button>`;
+    }).join('');
+
+    const emptyHtml = filtered.length === 0 ? `<div style="padding:34px 20px;border:1px solid rgba(184,151,74,0.16);border-radius:14px;background:#111111;text-align:center"><p style="margin:0;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:19px;font-weight:300;color:rgba(240,235,224,0.55)">Nada aqui por enquanto.</p></div>` : '';
+
+    return `<div style="padding:22px 18px 26px;display:flex;flex-direction:column;gap:16px">
+      <div>
+        <h1 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:300;font-size:28px;color:#f0ebe0">Suas <em style="font-style:italic;color:#b8974a">tarefas</em></h1>
+        <p style="margin:9px 0 0;font-size:11px;font-weight:300;line-height:1.7;color:rgba(240,235,224,0.5)">${doneCount} concluídas · ${pending} pendentes</p>
+      </div>
+      <div style="display:flex;gap:1px;padding:1px;border:1px solid rgba(184,151,74,0.18);border-radius:10px;background:rgba(184,151,74,0.1)">${filtersHtml}</div>
+      <div style="display:flex;flex-direction:column;gap:9px">${tasksHtml}${emptyHtml}</div>
+    </div>`;
+  },
+
+  renderMarca() {
+    const swapsHtml = SWAPS.map(s => `
+      <div style="display:grid;grid-template-columns:1fr 24px 1fr;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid rgba(184,151,74,0.1)">
+        <span style="font-size:10.5px;font-weight:300;color:rgba(240,235,224,0.32);text-decoration:line-through">${s.from}</span>
+        <span style="text-align:center;color:#b8974a;font-size:11px">→</span>
+        <span style="font-family:'Cormorant Garamond',serif;font-size:16px;color:#f0ebe0">${s.to}</span>
+      </div>`).join('');
+
+    const toneHtml = TONE.map(t => `<span style="padding:9px 14px;border:1px solid rgba(184,151,74,0.26);border-radius:100px;font-size:8.5px;letter-spacing:2px;text-transform:uppercase;color:rgba(240,235,224,0.72)">${t}</span>`).join('');
+
+    return `<div style="padding:22px 18px 26px;display:flex;flex-direction:column;gap:22px">
+      <div>
+        <h1 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:300;font-size:28px;color:#f0ebe0">Kit de <em style="font-style:italic;color:#b8974a">marca</em></h1>
+        <p style="margin:9px 0 0;font-size:11px;font-weight:300;line-height:1.7;color:rgba(240,235,224,0.5)">Consulta rápida no atendimento: paleta, vocabulário e tom de voz.</p>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:11px">
+        <span style="font-size:8.5px;letter-spacing:2.8px;text-transform:uppercase;color:rgba(240,235,224,0.34)">Paleta</span>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:9px">
+          <div style="display:flex;flex-direction:column;gap:7px"><span style="display:block;height:56px;border-radius:10px;border:1px solid rgba(184,151,74,0.2);background:#0a0a0a"></span><span style="font-size:7.5px;letter-spacing:1.2px;color:rgba(240,235,224,0.4)">#0A0A0A</span></div>
+          <div style="display:flex;flex-direction:column;gap:7px"><span style="display:block;height:56px;border-radius:10px;border:1px solid rgba(184,151,74,0.2);background:#b8974a"></span><span style="font-size:7.5px;letter-spacing:1.2px;color:rgba(240,235,224,0.4)">#B8974A</span></div>
+          <div style="display:flex;flex-direction:column;gap:7px"><span style="display:block;height:56px;border-radius:10px;border:1px solid rgba(184,151,74,0.2);background:#d4b06a"></span><span style="font-size:7.5px;letter-spacing:1.2px;color:rgba(240,235,224,0.4)">#D4B06A</span></div>
+          <div style="display:flex;flex-direction:column;gap:7px"><span style="display:block;height:56px;border-radius:10px;border:1px solid rgba(184,151,74,0.2);background:#f0ebe0"></span><span style="font-size:7.5px;letter-spacing:1.2px;color:rgba(240,235,224,0.4)">#F0EBE0</span></div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:11px">
+        <span style="font-size:8.5px;letter-spacing:2.8px;text-transform:uppercase;color:rgba(240,235,224,0.34)">Trocas de vocabulário</span>
+        <div style="border:1px solid rgba(184,151,74,0.16);border-radius:14px;overflow:hidden;background:#111111">${swapsHtml}</div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:11px">
+        <span style="font-size:8.5px;letter-spacing:2.8px;text-transform:uppercase;color:rgba(240,235,224,0.34)">Tom de voz</span>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">${toneHtml}</div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:11px">
+        <span style="font-size:8.5px;letter-spacing:2.8px;text-transform:uppercase;color:rgba(240,235,224,0.34)">Assinatura visual</span>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px">
+          <div style="padding:16px;border:1px solid rgba(184,151,74,0.16);border-radius:12px;background:#111111;display:flex;flex-direction:column;gap:8px"><span style="font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:300;color:#f0ebe0">Luz de janela</span><span style="font-size:9.5px;font-weight:300;line-height:1.55;color:rgba(240,235,224,0.42)">Fonte única, lateral, sombra desenhada.</span></div>
+          <div style="padding:16px;border:1px solid rgba(184,151,74,0.16);border-radius:12px;background:#111111;display:flex;flex-direction:column;gap:8px"><span style="font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:300;color:#f0ebe0">Paleta terrosa</span><span style="font-size:9.5px;font-weight:300;line-height:1.55;color:rgba(240,235,224,0.42)">Creme, areia, terracota, preto.</span></div>
+          <div style="padding:16px;border:1px solid rgba(184,151,74,0.16);border-radius:12px;background:#111111;display:flex;flex-direction:column;gap:8px"><span style="font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:300;color:#f0ebe0">Gesto contido</span><span style="font-size:9.5px;font-weight:300;line-height:1.55;color:rgba(240,235,224,0.42)">Olhar fora da câmera, mão no colo.</span></div>
+          <div style="padding:16px;border:1px solid rgba(184,151,74,0.16);border-radius:12px;background:#111111;display:flex;flex-direction:column;gap:8px"><span style="font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:300;color:#f0ebe0">Grão fino</span><span style="font-size:9.5px;font-weight:300;line-height:1.55;color:rgba(240,235,224,0.42)">Textura de filme, preto suave.</span></div>
+        </div>
+      </div>
+    </div>`;
+  },
+
+  renderPerfil(pct, doneCount) {
+    return `<div style="padding:22px 18px 26px;display:flex;flex-direction:column;gap:20px">
+      <div style="display:flex;align-items:center;gap:15px">
+        <span style="flex:none;width:60px;height:60px;border:1px solid rgba(184,151,74,0.3);border-radius:100px;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:22px;color:#b8974a;background:#111111">L</span>
+        <span style="display:flex;flex-direction:column;gap:5px">
+          <span style="font-family:'Cormorant Garamond',serif;font-size:23px;font-weight:300;color:#f0ebe0">Lumiar Retratos</span>
+          <span style="font-size:8.5px;letter-spacing:2.4px;text-transform:uppercase;color:rgba(240,235,224,0.38)">Estúdio · Guaíra SP</span>
+        </span>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px">
+        <div style="padding:16px;border:1px solid rgba(184,151,74,0.14);border-radius:12px;background:#111111;display:flex;flex-direction:column;gap:6px">
+          <span style="font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;color:#b8974a;line-height:1">${pct}%</span>
+          <span style="font-size:7.5px;letter-spacing:2px;text-transform:uppercase;color:rgba(240,235,224,0.4)">Do plano</span>
+        </div>
+        <div style="padding:16px;border:1px solid rgba(184,151,74,0.14);border-radius:12px;background:#111111;display:flex;flex-direction:column;gap:6px">
+          <span style="font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;color:#b8974a;line-height:1">${doneCount}</span>
+          <span style="font-size:7.5px;letter-spacing:2px;text-transform:uppercase;color:rgba(240,235,224,0.4)">Tarefas feitas</span>
+        </div>
+      </div>
+
+      <div style="border:1px solid rgba(184,151,74,0.16);border-radius:14px;overflow:hidden;background:#111111">
+        <button onclick="App.go('marca')" style="width:100%;min-height:52px;padding:0 16px;border:0;border-bottom:1px solid rgba(184,151,74,0.1);background:transparent;display:flex;align-items:center;justify-content:space-between;font-family:Montserrat,sans-serif;font-size:11px;font-weight:300;color:#f0ebe0;cursor:pointer;transition:background .2s ease">Kit de marca<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#b8974a" stroke-width="1.3"><path d="M9 5l7 7-7 7"/></svg></button>
+        <button onclick="App.go('fases')" style="width:100%;min-height:52px;padding:0 16px;border:0;border-bottom:1px solid rgba(184,151,74,0.1);background:transparent;display:flex;align-items:center;justify-content:space-between;font-family:Montserrat,sans-serif;font-size:11px;font-weight:300;color:#f0ebe0;cursor:pointer;transition:background .2s ease">Todas as fases<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#b8974a" stroke-width="1.3"><path d="M9 5l7 7-7 7"/></svg></button>
+        <button onclick="App.resetAll()" style="width:100%;min-height:52px;padding:0 16px;border:0;background:transparent;display:flex;align-items:center;justify-content:space-between;font-family:Montserrat,sans-serif;font-size:11px;font-weight:300;color:rgba(240,235,224,0.55);cursor:pointer;transition:background .2s ease">Zerar progresso<span style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#b8974a">Reset</span></button>
+      </div>
+
+      <p style="margin:0;font-size:9.5px;font-weight:300;line-height:1.7;color:rgba(240,235,224,0.3)">Progresso salvo neste dispositivo. Nenhum dado sai do aparelho.</p>
+    </div>`;
+  }
+};
+
+// ── PWA Manifest ──
 try {
-  const manifest = {
-    name: 'Lumiar · Plano de Marca',
-    short_name: 'Lumiar',
-    start_url: '.',
-    display: 'standalone',
-    background_color: '#0a0a0a',
-    theme_color: '#0a0a0a',
-    icons: [{
-      src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' fill='%230a0a0a'/%3E%3Ctext x='96' y='115' font-family='Georgia,serif' font-size='48' text-anchor='middle' fill='%23b8974a' letter-spacing='4'%3EL%3C/text%3E%3C/svg%3E",
-      sizes: '192x192', type: 'image/svg+xml'
-    }]
-  };
-  const blob = new Blob([JSON.stringify(manifest)], {type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('link');
-  link.rel = 'manifest'; link.href = url;
-  document.head.appendChild(link);
-} catch {}
+  const m = {name:'Lumiar · Plano de Marca',short_name:'Lumiar',start_url:'.',display:'standalone',background_color:'#0a0a0a',theme_color:'#0a0a0a',icons:[{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' fill='%230a0a0a'/%3E%3Ctext x='96' y='115' font-family='Georgia,serif' font-size='52' text-anchor='middle' fill='%23b8974a' letter-spacing='4'%3EL%3C/text%3E%3C/svg%3E",sizes:'192x192',type:'image/svg+xml'}]};
+  const b = new Blob([JSON.stringify(m)],{type:'application/json'});
+  const l = document.createElement('link');
+  l.rel='manifest';l.href=URL.createObjectURL(b);
+  document.head.appendChild(l);
+} catch(e){}
+
+// ── BOOT ──
+App.init();
 </script>
 </body>
 </html>
