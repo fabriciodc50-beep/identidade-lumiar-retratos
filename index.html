@@ -7,6 +7,12 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Lumiar">
 <meta name="theme-color" content="#0a0a0a">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icon-512.png">
+<link rel="apple-touch-icon" sizes="192x192" href="./icon-192.png">
+<link rel="apple-touch-icon" sizes="512x512" href="./icon-512.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <title>Lumiar · Plano de Marca</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -14,573 +20,250 @@
 html,body{height:100%;overflow:hidden;background:#0a0a0a;-webkit-font-smoothing:antialiased}
 body{display:flex;flex-direction:column;font-family:'Montserrat',sans-serif;font-weight:300;color:#f0ebe0}
 *{-webkit-tap-highlight-color:transparent}
-a{color:#b8974a;text-decoration:none}
 ::-webkit-scrollbar{width:0;height:0}
 @keyframes lmIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes slideUp{from{opacity:0;transform:translateY(100%)}to{opacity:1;transform:translateY(0)}}
+#install-overlay{display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);align-items:flex-end;justify-content:center}
+#install-overlay.show{display:flex}
+#install-sheet{width:100%;max-width:480px;background:#111111;border:1px solid rgba(184,151,74,0.25);border-radius:24px 24px 0 0;padding:28px 24px 40px;animation:slideUp .35s cubic-bezier(0.32,0.72,0,1) both}
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <header id="hdr" style="flex:none;z-index:5;padding:calc(env(safe-area-inset-top,0px) + 14px) 18px 12px;display:flex;align-items:center;gap:12px;background:#0a0a0a;border-bottom:1px solid rgba(184,151,74,0.14)">
-  <button id="btn-back" aria-label="Voltar" onclick="App.go('fases')" style="flex:none;width:38px;height:38px;display:none;align-items:center;justify-content:center;border:1px solid rgba(184,151,74,0.22);border-radius:10px;background:#111111;color:#b8974a;cursor:pointer;transition:background .2s ease">
+  <button id="btn-back" aria-label="Voltar" onclick="App.go('fases')" style="flex:none;width:38px;height:38px;display:none;align-items:center;justify-content:center;border:1px solid rgba(184,151,74,0.22);border-radius:10px;background:#111111;color:#b8974a;cursor:pointer">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M15 5l-7 7 7 7"/></svg>
   </button>
   <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px">
     <div style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:17px;letter-spacing:4.5px;color:#b8974a;line-height:1">LUMIAR</div>
-    <div id="hdr-sub" style="font-size:8px;letter-spacing:2.6px;text-transform:uppercase;color:rgba(240,235,224,0.32);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Plano de elevação · 12 meses</div>
+    <div id="hdr-sub" style="font-size:8px;letter-spacing:2.6px;text-transform:uppercase;color:rgba(240,235,224,0.32);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Plano de elevação · 12 meses</div>
   </div>
-  <button onclick="App.go('perfil')" aria-label="Perfil" style="flex:none;width:38px;height:38px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(184,151,74,0.22);border-radius:100px;background:#111111;font-family:'Cormorant Garamond',serif;font-size:14px;color:#f0ebe0;cursor:pointer;transition:background .2s ease">L</button>
+  <button id="btn-install-hdr" onclick="Install.trigger()" style="flex:none;width:38px;height:38px;display:none;align-items:center;justify-content:center;border:1px solid rgba(184,151,74,0.3);border-radius:10px;background:#111111;color:#b8974a;cursor:pointer">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 3v12M7 11l5 5 5-5"/><rect x="3" y="18" width="18" height="3" rx="1"/></svg>
+  </button>
+  <button onclick="App.go('perfil')" style="flex:none;width:38px;height:38px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(184,151,74,0.22);border-radius:100px;background:#111111;font-family:'Cormorant Garamond',serif;font-size:14px;color:#f0ebe0;cursor:pointer">L</button>
 </header>
 
-<!-- MAIN -->
 <main id="main" style="flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;position:relative">
   <div style="position:absolute;top:0;left:0;right:0;height:280px;pointer-events:none;background:radial-gradient(ellipse at 50% 0%,rgba(184,151,74,0.10),transparent 70%)"></div>
   <div id="screen-content"></div>
 </main>
 
-<!-- BOTTOM NAV -->
-<nav id="bottom-nav" style="flex:none;z-index:5;display:grid;grid-template-columns:repeat(5,1fr);background:rgba(10,10,10,0.96);backdrop-filter:blur(14px);border-top:1px solid rgba(184,151,74,0.16);padding-bottom:env(safe-area-inset-bottom,0px)">
-  <button onclick="App.go('home')" id="nav-home" style="min-height:58px;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:#b8974a;cursor:pointer;transition:color .25s ease">
+<nav style="flex:none;z-index:5;display:grid;grid-template-columns:repeat(5,1fr);background:rgba(10,10,10,0.96);backdrop-filter:blur(14px);border-top:1px solid rgba(184,151,74,0.16);padding-bottom:env(safe-area-inset-bottom,0px)">
+  <button onclick="App.go('home')" id="nav-home" style="min-height:58px;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:#b8974a;cursor:pointer;transition:color .25s">
     <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M4 11l8-6.5 8 6.5v8a1 1 0 01-1 1h-4v-6H9v6H5a1 1 0 01-1-1z"/></svg>
-    <span style="font-family:Montserrat,sans-serif;font-size:7.5px;letter-spacing:1.6px;text-transform:uppercase">Início</span>
+    <span style="font-size:7.5px;letter-spacing:1.6px;text-transform:uppercase">Início</span>
   </button>
-  <button onclick="App.go('fases')" id="nav-fases" style="min-height:58px;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:rgba(240,235,224,0.34);cursor:pointer;transition:color .25s ease">
+  <button onclick="App.go('fases')" id="nav-fases" style="min-height:58px;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:rgba(240,235,224,0.34);cursor:pointer;transition:color .25s">
     <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
-    <span style="font-family:Montserrat,sans-serif;font-size:7.5px;letter-spacing:1.6px;text-transform:uppercase">Fases</span>
+    <span style="font-size:7.5px;letter-spacing:1.6px;text-transform:uppercase">Fases</span>
   </button>
-  <button onclick="App.go('tarefas')" id="nav-tarefas" style="min-height:58px;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:rgba(240,235,224,0.34);cursor:pointer;transition:color .25s ease">
+  <button onclick="App.go('tarefas')" id="nav-tarefas" style="min-height:58px;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:rgba(240,235,224,0.34);cursor:pointer;transition:color .25s">
     <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M4 7.5l2.5 2.5L11 5"/><path d="M4 17.5L6.5 20 11 15"/><path d="M14 8h6M14 18h6"/></svg>
-    <span style="font-family:Montserrat,sans-serif;font-size:7.5px;letter-spacing:1.6px;text-transform:uppercase">Tarefas</span>
+    <span style="font-size:7.5px;letter-spacing:1.6px;text-transform:uppercase">Tarefas</span>
   </button>
-  <button onclick="App.go('marca')" id="nav-marca" style="min-height:58px;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:rgba(240,235,224,0.34);cursor:pointer;transition:color .25s ease">
+  <button onclick="App.go('marca')" id="nav-marca" style="min-height:58px;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:rgba(240,235,224,0.34);cursor:pointer;transition:color .25s">
     <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.6"/></svg>
-    <span style="font-family:Montserrat,sans-serif;font-size:7.5px;letter-spacing:1.6px;text-transform:uppercase">Marca</span>
+    <span style="font-size:7.5px;letter-spacing:1.6px;text-transform:uppercase">Marca</span>
   </button>
-  <button onclick="App.go('perfil')" id="nav-perfil" style="min-height:58px;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:rgba(240,235,224,0.34);cursor:pointer;transition:color .25s ease">
+  <button onclick="App.go('perfil')" id="nav-perfil" style="min-height:58px;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:rgba(240,235,224,0.34);cursor:pointer;transition:color .25s">
     <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="12" cy="8.5" r="3.6"/><path d="M5 20c0-3.6 3.1-5.5 7-5.5s7 1.9 7 5.5"/></svg>
-    <span style="font-family:Montserrat,sans-serif;font-size:7.5px;letter-spacing:1.6px;text-transform:uppercase">Perfil</span>
+    <span style="font-size:7.5px;letter-spacing:1.6px;text-transform:uppercase">Perfil</span>
   </button>
 </nav>
 
+<!-- INSTALL MODAL -->
+<div id="install-overlay" onclick="Install.closeOverlay(event)">
+  <div id="install-sheet">
+    <div style="width:40px;height:4px;background:rgba(184,151,74,0.3);border-radius:2px;margin:0 auto 24px"></div>
+    <div style="display:flex;justify-content:center;margin-bottom:20px">
+      <div style="width:72px;height:72px;border-radius:18px;overflow:hidden;border:1px solid rgba(184,151,74,0.3)">
+        <img src="./icon-192.png" width="72" height="72" alt="Lumiar">
+      </div>
+    </div>
+    <div style="text-align:center;margin-bottom:24px">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;color:#f0ebe0;letter-spacing:3px;margin-bottom:6px">LUMIAR</div>
+      <div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(240,235,224,0.4)">Plano de Marca · v2.0</div>
+    </div>
+    <div id="install-android" style="display:none;flex-direction:column;gap:10px">
+      <button onclick="Install.installAndroid()" style="width:100%;min-height:52px;border:0;border-radius:14px;background:#b8974a;color:#0a0a0a;font-family:Montserrat,sans-serif;font-size:10px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;cursor:pointer">Instalar na tela inicial</button>
+      <button onclick="Install.close()" style="width:100%;min-height:44px;border:1px solid rgba(184,151,74,0.2);border-radius:14px;background:transparent;color:rgba(240,235,224,0.5);font-family:Montserrat,sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;cursor:pointer">Agora não</button>
+    </div>
+    <div id="install-ios" style="display:none;flex-direction:column;gap:16px">
+      <div style="background:#0a0a0a;border:1px solid rgba(184,151,74,0.15);border-radius:14px;padding:18px 16px;display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <span style="flex:none;width:32px;height:32px;border:1px solid rgba(184,151,74,0.25);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#b8974a;font-size:18px">⬆</span>
+          <span style="font-size:11px;font-weight:300;color:#f0ebe0;line-height:1.5">Toque em <strong style="color:#b8974a">Compartilhar</strong> no Safari</span>
+        </div>
+        <div style="height:1px;background:rgba(184,151,74,0.1)"></div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <span style="flex:none;width:32px;height:32px;border:1px solid rgba(184,151,74,0.25);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#b8974a;font-size:18px">＋</span>
+          <span style="font-size:11px;font-weight:300;color:#f0ebe0;line-height:1.5">Toque em <strong style="color:#b8974a">Adicionar à Tela de Início</strong></span>
+        </div>
+        <div style="height:1px;background:rgba(184,151,74,0.1)"></div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <span style="flex:none;width:32px;height:32px;border:1px solid rgba(184,151,74,0.25);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#b8974a;font-size:16px">✓</span>
+          <span style="font-size:11px;font-weight:300;color:#f0ebe0;line-height:1.5">Toque em <strong style="color:#b8974a">Adicionar</strong> — pronto!</span>
+        </div>
+      </div>
+      <p style="text-align:center;font-size:9px;letter-spacing:1.5px;color:rgba(240,235,224,0.3);text-transform:uppercase">Abre como app · funciona offline · ícone na tela</p>
+      <button onclick="Install.close()" style="width:100%;min-height:44px;border:1px solid rgba(184,151,74,0.2);border-radius:14px;background:transparent;color:rgba(240,235,224,0.5);font-family:Montserrat,sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;cursor:pointer">Fechar</button>
+    </div>
+    <div id="install-generic" style="display:none;flex-direction:column;gap:12px">
+      <p style="font-size:11px;font-weight:300;line-height:1.7;color:rgba(240,235,224,0.65);text-align:center">No menu do seu navegador, procure <strong style="color:#b8974a">"Adicionar à tela inicial"</strong> ou <strong style="color:#b8974a">"Instalar app"</strong>.</p>
+      <button onclick="Install.close()" style="width:100%;min-height:44px;border:1px solid rgba(184,151,74,0.2);border-radius:14px;background:transparent;color:rgba(240,235,224,0.5);font-family:Montserrat,sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;cursor:pointer">Fechar</button>
+    </div>
+  </div>
+</div>
+
 <script>
-// ════════════════════════════════════════
-// DATA
-// ════════════════════════════════════════
+const VERSION = 'v2.0';
 const GOLD = '#b8974a';
 const KEY = 'lumiar.plano.done.v1';
 const TAB_KEY = 'lumiar.tab.v1';
 const PHASE_KEY = 'lumiar.phase.v1';
 
 const PHASES = [
-  { num:'01', label:'Fundação da identidade', period:'Dias 1–30',
-    intro:'Antes de mudar qualquer imagem, definimos quem a Lumiar é quando ninguém está olhando. Os pilares aqui decidem preço, agenda e enquadramento pelos próximos doze meses.',
-    quote:'Marca premium não é a que cobra mais. É a que consegue dizer não.',
-    result:'Um documento de marca de uma página que decide, sozinho, o que o estúdio aceita fotografar, quanto cobra e como responde.',
-    tasks:[
-      {t:'Escrever o manifesto da marca em uma página',n:'Posicionamento, cliente ideal e o que a Lumiar recusa.'},
-      {t:'Definir os quatro pilares visuais e emocionais',n:'Sofisticação silenciosa, feminilidade, maternidade autoral, exclusividade.'},
-      {t:'Mapear as três clientes-alvo com nome e história',n:'Idade, momento de vida, o que ela busca no retrato.'},
-      {t:'Listar o que sai do portfólio',n:'Todo trabalho que não sustenta o novo posicionamento.'}]},
-  { num:'02', label:'Nova linguagem', period:'Dias 20–45',
-    intro:'A palavra vem antes da imagem. Trocar o vocabulário do estúdio muda a percepção de valor antes de qualquer mudança estética — e custa zero.',
-    quote:'Quem explica demais está pedindo permissão. A Lumiar apenas convida.',
-    result:'Guia de vocabulário aplicado a site, WhatsApp, legendas e contrato. A mesma sessão passa a ser percebida duas categorias acima.',
-    tasks:[
-      {t:'Aplicar a tabela de trocas em todos os canais',n:'Site, Instagram, WhatsApp e contrato na mesma linguagem.'},
-      {t:'Reescrever as respostas prontas do WhatsApp',n:'Cinco mensagens-padrão: primeiro contato, valor, agenda, entrega, pós.'},
-      {t:'Criar a apresentação verbal do estúdio',n:'Três frases que explicam a Lumiar sem falar de equipamento.'}]},
-  { num:'03', label:'Código visual', period:'Dias 30–60',
-    intro:'Uma assinatura reconhecível a três metros de distância: luz baixa, pele quente, gesto contido. Repetição é o que transforma estilo em marca.',
-    quote:'Assinatura não é o que você sabe fazer. É o que você repete.',
-    result:'Preset único, três cenários fixos e um padrão de entrega de 25 imagens que qualquer pessoa reconhece como Lumiar.',
-    tasks:[
-      {t:'Fechar um preset autoral único',n:'Grão fino, preto suave, zero clareamento de pele.'},
-      {t:'Definir três cenários fixos de estúdio',n:'Luz de janela, fundo neutro, tecido em movimento.'},
-      {t:'Refazer o portfólio com 25 imagens',n:'Somente trabalho que representa o novo padrão.'},
-      {t:'Criar o guia de poses de gesto contido',n:'Referências impressas para usar durante a sessão.'}]},
-  { num:'04', label:'Experiência da cliente', period:'Dias 45–90',
-    intro:'O que se cobra por uma experiência premium se justifica antes e depois do clique. A jornada tem sete pontos de contato — nenhum deles improvisado.',
-    quote:'A cliente não lembra das fotos. Lembra de como se sentiu ao ser fotografada.',
-    result:'Jornada documentada do primeiro contato à revelação, com rituais fixos que sustentam o preço praticado.',
-    tasks:[
-      {t:'Desenhar a jornada em sete pontos de contato',n:'Do primeiro contato à revelação das imagens.'},
-      {t:'Criar o ritual de recepção no estúdio',n:'Chá, música, espelho, tempo de conversa antes da câmera.'},
-      {t:'Montar a consultoria de styling pré-sessão',n:'Chamada de 20 minutos sobre roupa, cabelo e referências.'},
-      {t:'Definir o momento da revelação',n:'Apresentação presencial das imagens, nunca por link cru.'}]},
-  { num:'05', label:'Presença digital', period:'Meses 3–6',
-    intro:'O digital não vende a sessão: ele confirma o preço. Cada peça publicada precisa parecer editorial, nunca anúncio.',
-    quote:'Um feed premium é feito de ausências. O que não se publica também comunica.',
-    result:'Instagram e site editoriais, com ritmo semanal fixo e zero linguagem promocional.',
-    tasks:[
-      {t:'Reformular o feed em grade editorial',n:'Três colunas com respiro: retrato, detalhe, texto.'},
-      {t:'Definir a grade semanal de publicação',n:'Dois posts autorais, um bastidor, um depoimento.'},
-      {t:'Publicar o site de página única',n:'Portfólio, experiência, investimento e convite.'},
-      {t:'Encerrar toda comunicação promocional',n:'Sem cupom, contagem regressiva ou preço em destaque.'}]},
-  { num:'06', label:'Precificação e oferta', period:'Meses 6–9',
-    intro:'Com identidade, linguagem, visual e experiência no lugar, o preço deixa de ser negociação e passa a ser consequência.',
-    quote:'Preço é o último ajuste. Antes dele, tudo precisa já parecer caro.',
-    result:'Três experiências com preços definidos, agenda limitada e taxa de fechamento acompanhada mês a mês.',
-    tasks:[
-      {t:'Estruturar três experiências, não pacotes',n:'Essência, Autoral e Maternidade Fine Art.'},
-      {t:'Reajustar valores em duas etapas',n:'Aumento gradual com comunicação clara às clientes antigas.'},
-      {t:'Limitar a agenda a oito sessões por mês',n:'Escassez real, sustentada por capacidade de edição.'},
-      {t:'Criar a política de contrato e remarcação',n:'Termos claros, sinal de reserva e prazos de entrega.'}]},
-  { num:'07', label:'Consolidação', period:'Meses 9–12',
-    intro:'A marca sustentada por sistema, não por esforço. Nesta fase os padrões viram rotina e o crescimento passa a vir por indicação.',
-    quote:'Marca consolidada é aquela que continua igual quando ninguém está cobrando.',
-    result:'Estúdio operando com padrões documentados, indicações constantes e um projeto autoral anual como vitrine.',
-    tasks:[
-      {t:'Documentar todos os padrões em um manual',n:'Atendimento, sessão, edição, entrega e pós-venda.'},
-      {t:'Criar o programa de indicação silencioso',n:'Convite pessoal, sem premiação comercial explícita.'},
-      {t:'Produzir um projeto autoral anual',n:'Série fotográfica exposta, sem finalidade comercial direta.'},
-      {t:'Revisar os doze meses e planejar o próximo ciclo',n:'Números, aprendizados e próximos limites.'}]}
+  {num:'01',label:'Fundação da identidade',period:'Dias 1–30',intro:'Antes de mudar qualquer imagem, definimos quem a Lumiar é quando ninguém está olhando. Os pilares aqui decidem preço, agenda e enquadramento pelos próximos doze meses.',quote:'Marca premium não é a que cobra mais. É a que consegue dizer não.',result:'Um documento de marca de uma página que decide, sozinho, o que o estúdio aceita fotografar, quanto cobra e como responde.',tasks:[{t:'Escrever o manifesto da marca em uma página',n:'Posicionamento, cliente ideal e o que a Lumiar recusa.'},{t:'Definir os quatro pilares visuais e emocionais',n:'Sofisticação silenciosa, feminilidade, maternidade autoral, exclusividade.'},{t:'Mapear as três clientes-alvo com nome e história',n:'Idade, momento de vida, o que ela busca no retrato.'},{t:'Listar o que sai do portfólio',n:'Todo trabalho que não sustenta o novo posicionamento.'}]},
+  {num:'02',label:'Nova linguagem',period:'Dias 20–45',intro:'A palavra vem antes da imagem. Trocar o vocabulário do estúdio muda a percepção de valor antes de qualquer mudança estética — e custa zero.',quote:'Quem explica demais está pedindo permissão. A Lumiar apenas convida.',result:'Guia de vocabulário aplicado a site, WhatsApp, legendas e contrato. A mesma sessão passa a ser percebida duas categorias acima.',tasks:[{t:'Aplicar a tabela de trocas em todos os canais',n:'Site, Instagram, WhatsApp e contrato na mesma linguagem.'},{t:'Reescrever as respostas prontas do WhatsApp',n:'Cinco mensagens-padrão: primeiro contato, valor, agenda, entrega, pós.'},{t:'Criar a apresentação verbal do estúdio',n:'Três frases que explicam a Lumiar sem falar de equipamento.'}]},
+  {num:'03',label:'Código visual',period:'Dias 30–60',intro:'Uma assinatura reconhecível a três metros de distância: luz baixa, pele quente, gesto contido. Repetição é o que transforma estilo em marca.',quote:'Assinatura não é o que você sabe fazer. É o que você repete.',result:'Preset único, três cenários fixos e um padrão de entrega de 25 imagens que qualquer pessoa reconhece como Lumiar.',tasks:[{t:'Fechar um preset autoral único',n:'Grão fino, preto suave, zero clareamento de pele.'},{t:'Definir três cenários fixos de estúdio',n:'Luz de janela, fundo neutro, tecido em movimento.'},{t:'Refazer o portfólio com 25 imagens',n:'Somente trabalho que representa o novo padrão.'},{t:'Criar o guia de poses de gesto contido',n:'Referências impressas para usar durante a sessão.'}]},
+  {num:'04',label:'Experiência da cliente',period:'Dias 45–90',intro:'O que se cobra por uma experiência premium se justifica antes e depois do clique. A jornada tem sete pontos de contato — nenhum deles improvisado.',quote:'A cliente não lembra das fotos. Lembra de como se sentiu ao ser fotografada.',result:'Jornada documentada do primeiro contato à revelação, com rituais fixos que sustentam o preço praticado.',tasks:[{t:'Desenhar a jornada em sete pontos de contato',n:'Do primeiro contato à revelação das imagens.'},{t:'Criar o ritual de recepção no estúdio',n:'Chá, música, espelho, tempo de conversa antes da câmera.'},{t:'Montar a consultoria de styling pré-sessão',n:'Chamada de 20 minutos sobre roupa, cabelo e referências.'},{t:'Definir o momento da revelação',n:'Apresentação presencial das imagens, nunca por link cru.'}]},
+  {num:'05',label:'Presença digital',period:'Meses 3–6',intro:'O digital não vende a sessão: ele confirma o preço. Cada peça publicada precisa parecer editorial, nunca anúncio.',quote:'Um feed premium é feito de ausências. O que não se publica também comunica.',result:'Instagram e site editoriais, com ritmo semanal fixo e zero linguagem promocional.',tasks:[{t:'Reformular o feed em grade editorial',n:'Três colunas com respiro: retrato, detalhe, texto.'},{t:'Definir a grade semanal de publicação',n:'Dois posts autorais, um bastidor, um depoimento.'},{t:'Publicar o site de página única',n:'Portfólio, experiência, investimento e convite.'},{t:'Encerrar toda comunicação promocional',n:'Sem cupom, contagem regressiva ou preço em destaque.'}]},
+  {num:'06',label:'Precificação e oferta',period:'Meses 6–9',intro:'Com identidade, linguagem, visual e experiência no lugar, o preço deixa de ser negociação e passa a ser consequência.',quote:'Preço é o último ajuste. Antes dele, tudo precisa já parecer caro.',result:'Três experiências com preços definidos, agenda limitada e taxa de fechamento acompanhada mês a mês.',tasks:[{t:'Estruturar três experiências, não pacotes',n:'Essência, Autoral e Maternidade Fine Art.'},{t:'Reajustar valores em duas etapas',n:'Aumento gradual com comunicação clara às clientes antigas.'},{t:'Limitar a agenda a oito sessões por mês',n:'Escassez real, sustentada por capacidade de edição.'},{t:'Criar a política de contrato e remarcação',n:'Termos claros, sinal de reserva e prazos de entrega.'}]},
+  {num:'07',label:'Consolidação',period:'Meses 9–12',intro:'A marca sustentada por sistema, não por esforço. Nesta fase os padrões viram rotina e o crescimento passa a vir por indicação.',quote:'Marca consolidada é aquela que continua igual quando ninguém está cobrando.',result:'Estúdio operando com padrões documentados, indicações constantes e um projeto autoral anual como vitrine.',tasks:[{t:'Documentar todos os padrões em um manual',n:'Atendimento, sessão, edição, entrega e pós-venda.'},{t:'Criar o programa de indicação silencioso',n:'Convite pessoal, sem premiação comercial explícita.'},{t:'Produzir um projeto autoral anual',n:'Série fotográfica exposta, sem finalidade comercial direta.'},{t:'Revisar os doze meses e planejar o próximo ciclo',n:'Números, aprendizados e próximos limites.'}]}
 ];
 
-const SWAPS = [
-  {from:'Pacote de fotos',to:'Experiência'},
-  {from:'Cliente',to:'Retratada'},
-  {from:'Ensaio',to:'Sessão autoral'},
-  {from:'Promoção',to:'Convite'},
-  {from:'Orçamento',to:'Investimento'},
-  {from:'Entrega das fotos',to:'Revelação'}
-];
+const SWAPS=[{from:'Pacote de fotos',to:'Experiência'},{from:'Cliente',to:'Retratada'},{from:'Ensaio',to:'Sessão autoral'},{from:'Promoção',to:'Convite'},{from:'Orçamento',to:'Investimento'},{from:'Entrega das fotos',to:'Revelação'}];
+const TONE=['Frases curtas','Sem emoji','Primeira pessoa','Nunca urgência','Convite','Silêncio'];
 
-const TONE = ['Frases curtas','Sem emoji','Primeira pessoa','Nunca urgência','Convite','Silêncio'];
+// SERVICE WORKER
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').catch(() => {});
+}
 
-// ════════════════════════════════════════
-// STATE
-// ════════════════════════════════════════
-const App = {
-  state: {
-    tab: 'home',
-    phaseIdx: 0,
-    filter: 'pendentes',
-    done: {}
-  },
-
+// INSTALL
+const Install = {
+  deferredPrompt: null,
   init() {
-    // Load persisted data
-    try {
-      const raw = localStorage.getItem(KEY);
-      if (raw) this.state.done = JSON.parse(raw) || {};
-    } catch(e){}
-    try {
-      const tab = localStorage.getItem(TAB_KEY);
-      if (tab && ['home','fases','tarefas','marca','perfil'].includes(tab)) this.state.tab = tab;
-    } catch(e){}
-    try {
-      const pi = parseInt(localStorage.getItem(PHASE_KEY));
-      if (!isNaN(pi) && pi >= 0 && pi < PHASES.length) this.state.phaseIdx = pi;
-    } catch(e){}
-    this.render();
+    window.addEventListener('beforeinstallprompt', e => {
+      e.preventDefault();
+      this.deferredPrompt = e;
+      const b = document.getElementById('btn-install-hdr');
+      if (b) b.style.display = 'flex';
+    });
+    window.addEventListener('appinstalled', () => {
+      this.deferredPrompt = null;
+      const b = document.getElementById('btn-install-hdr');
+      if (b) b.style.display = 'none';
+    });
+    if (window.navigator.standalone) {
+      const b = document.getElementById('btn-install-hdr');
+      if (b) b.style.display = 'none';
+    }
   },
-
-  persist() {
-    try { localStorage.setItem(KEY, JSON.stringify(this.state.done)); } catch(e){}
-    try { localStorage.setItem(TAB_KEY, this.state.tab); } catch(e){}
-    try { localStorage.setItem(PHASE_KEY, this.state.phaseIdx); } catch(e){}
+  isIOS() { return /iphone|ipad|ipod/i.test(navigator.userAgent); },
+  trigger() {
+    document.getElementById('install-overlay').classList.add('show');
+    document.getElementById('install-android').style.display = 'none';
+    document.getElementById('install-ios').style.display = 'none';
+    document.getElementById('install-generic').style.display = 'none';
+    if (this.deferredPrompt) document.getElementById('install-android').style.display = 'flex';
+    else if (this.isIOS()) document.getElementById('install-ios').style.display = 'flex';
+    else document.getElementById('install-generic').style.display = 'flex';
   },
-
-  toggle(id) {
-    if (this.state.done[id]) delete this.state.done[id];
-    else this.state.done[id] = true;
-    this.persist();
-    this.render();
+  async installAndroid() {
+    if (!this.deferredPrompt) return;
+    this.deferredPrompt.prompt();
+    const {outcome} = await this.deferredPrompt.userChoice;
+    this.deferredPrompt = null; this.close();
+    if (outcome==='accepted') { const b=document.getElementById('btn-install-hdr'); if(b) b.style.display='none'; }
   },
+  close() { document.getElementById('install-overlay').classList.remove('show'); },
+  closeOverlay(e) { if (e.target===document.getElementById('install-overlay')) this.close(); }
+};
 
-  go(tab) {
-    this.state.tab = tab;
-    this.persist();
-    this.render();
-    requestAnimationFrame(() => { document.getElementById('main').scrollTop = 0; });
+// APP
+const App = {
+  state: {tab:'home', phaseIdx:0, filter:'pendentes', done:{}},
+  init() {
+    try{const r=localStorage.getItem(KEY);if(r)this.state.done=JSON.parse(r)||{};}catch(e){}
+    try{const t=localStorage.getItem(TAB_KEY);if(t&&['home','fases','tarefas','marca','perfil'].includes(t))this.state.tab=t;}catch(e){}
+    try{const p=parseInt(localStorage.getItem(PHASE_KEY));if(!isNaN(p)&&p>=0&&p<PHASES.length)this.state.phaseIdx=p;}catch(e){}
+    Install.init(); this.render();
   },
-
-  openPhase(i) {
-    this.state.phaseIdx = i;
-    this.state.tab = 'fase';
-    this.persist();
-    this.render();
-    requestAnimationFrame(() => { document.getElementById('main').scrollTop = 0; });
+  persist(){
+    try{localStorage.setItem(KEY,JSON.stringify(this.state.done));}catch(e){}
+    try{localStorage.setItem(TAB_KEY,this.state.tab);}catch(e){}
+    try{localStorage.setItem(PHASE_KEY,this.state.phaseIdx);}catch(e){}
   },
-
-  setFilter(f) {
-    this.state.filter = f;
-    this.render();
+  toggle(id){if(this.state.done[id])delete this.state.done[id];else this.state.done[id]=true;this.persist();this.render();},
+  go(tab){this.state.tab=tab;this.persist();this.render();requestAnimationFrame(()=>{document.getElementById('main').scrollTop=0;});},
+  openPhase(i){this.state.phaseIdx=i;this.state.tab='fase';this.persist();this.render();requestAnimationFrame(()=>{document.getElementById('main').scrollTop=0;});},
+  setFilter(f){this.state.filter=f;this.render();},
+  resetAll(){if(!confirm('Zerar todo o progresso?'))return;this.state.done={};this.persist();this.render();},
+  allTasks(){const out=[];PHASES.forEach((p,pi)=>p.tasks.forEach((t,ti)=>{out.push({id:p.num+'-'+ti,title:t.t,note:t.n,phaseLabel:'Fase '+p.num+' · '+p.label,phaseIdx:pi});}));return out;},
+  stats(){const all=this.allTasks();const dc=all.filter(t=>this.state.done[t.id]).length;const total=all.length;const pct=total?Math.round((dc/total)*100):0;return{all,doneCount:dc,total,pct,pending:total-dc};},
+  render(){
+    const s=this.state;const {all,doneCount,total,pct,pending}=this.stats();
+    const subs={home:'Plano de elevação · 12 meses',fases:'Sete fases',fase:'Fase '+PHASES[s.phaseIdx].num,tarefas:'Checklist do plano',marca:'Kit de marca',perfil:'Estúdio'};
+    document.getElementById('hdr-sub').textContent=subs[s.tab]||'';
+    document.getElementById('btn-back').style.display=s.tab==='fase'?'flex':'none';
+    const I='rgba(240,235,224,0.34)';
+    document.getElementById('nav-home').style.color=s.tab==='home'?GOLD:I;
+    document.getElementById('nav-fases').style.color=(s.tab==='fases'||s.tab==='fase')?GOLD:I;
+    document.getElementById('nav-tarefas').style.color=s.tab==='tarefas'?GOLD:I;
+    document.getElementById('nav-marca').style.color=s.tab==='marca'?GOLD:I;
+    document.getElementById('nav-perfil').style.color=s.tab==='perfil'?GOLD:I;
+    const c=document.getElementById('screen-content');
+    const prev=c.querySelector('section');
+    const sec=document.createElement('section');
+    sec.style.cssText='position:relative;animation:lmIn .28s ease both;display:flex;flex-direction:column';
+    if(s.tab==='home')sec.innerHTML=this.renderHome(doneCount,total,pct,pending,all);
+    else if(s.tab==='fases')sec.innerHTML=this.renderFases();
+    else if(s.tab==='fase')sec.innerHTML=this.renderFase(s.phaseIdx);
+    else if(s.tab==='tarefas')sec.innerHTML=this.renderTarefas(all,doneCount,pending);
+    else if(s.tab==='marca')sec.innerHTML=this.renderMarca();
+    else if(s.tab==='perfil')sec.innerHTML=this.renderPerfil(pct,doneCount);
+    if(prev)c.removeChild(prev);
+    c.appendChild(sec);
   },
-
-  resetAll() {
-    if (!confirm('Zerar todo o progresso?')) return;
-    this.state.done = {};
-    this.persist();
-    this.render();
+  renderHome(doneCount,total,pct,pending,all){
+    const r=34,len=2*Math.PI*r,offset=len*(1-pct/100);
+    const next=all.find(t=>!this.state.done[t.id]);
+    const ap=next?PHASES[next.phaseIdx]:null;
+    const ps=ap?'Em curso: fase '+ap.num+' · '+ap.period:'Todas as fases concluídas';
+    const pc=PHASES.map((p,i)=>{const d=p.tasks.filter((t,ti)=>this.state.done[p.num+'-'+ti]).length;const w=Math.round((d/p.tasks.length)*100)+'%';return`<button onclick="App.openPhase(${i})" style="flex:none;width:150px;padding:16px 15px;border:1px solid rgba(184,151,74,0.18);border-radius:14px;background:#111111;display:flex;flex-direction:column;gap:10px;text-align:left;cursor:pointer"><span style="font-family:'Cormorant Garamond',serif;font-size:11px;color:#b8974a">${p.num}</span><span style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300;color:#f0ebe0;line-height:1.15;min-height:42px">${p.label}</span><span style="display:block;width:100%;height:2px;border-radius:2px;background:rgba(184,151,74,0.16)"><span style="display:block;height:2px;background:#b8974a;border-radius:2px;width:${w}"></span></span><span style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(240,235,224,0.38)">${d}/${p.tasks.length}</span></button>`;}).join('');
+    const nh=next?`<div style="padding:16px 16px 14px;border:1px solid rgba(184,151,74,0.18);border-radius:14px;background:#111111;display:flex;flex-direction:column;gap:14px"><div style="display:flex;flex-direction:column;gap:7px"><span style="font-size:8px;letter-spacing:2.6px;text-transform:uppercase;color:#b8974a">${next.phaseLabel}</span><span style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;line-height:1.25;color:#f0ebe0">${next.title}</span><span style="font-size:10.5px;font-weight:300;line-height:1.6;color:rgba(240,235,224,0.5)">${next.note}</span></div><div style="display:flex;gap:9px"><button onclick="App.toggle('${next.id}')" style="flex:1;min-height:44px;border:1px solid #b8974a;border-radius:10px;background:rgba(184,151,74,0.1);color:#f0ebe0;font-family:Montserrat,sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;cursor:pointer">Marcar concluída</button><button onclick="App.openPhase(${next.phaseIdx})" style="flex:none;min-height:44px;padding:0 16px;border:1px solid rgba(184,151,74,0.22);border-radius:10px;background:transparent;color:rgba(240,235,224,0.7);font-family:Montserrat,sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;cursor:pointer">Abrir fase</button></div></div>`:`<div style="padding:22px 18px;border:1px solid rgba(184,151,74,0.4);border-radius:14px;background:radial-gradient(circle at 20% 0%,rgba(184,151,74,0.08),transparent 70%)"><span style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:21px;font-weight:300;color:#f0ebe0;display:block;margin-bottom:8px">Plano concluído.</span><span style="font-size:10.5px;font-weight:300;line-height:1.6;color:rgba(240,235,224,0.55)">Os doze meses foram cumpridos.</span></div>`;
+    return`<div style="padding:22px 18px 26px;display:flex;flex-direction:column;gap:18px"><div><div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(240,235,224,0.34)">Guaíra · SP</div><h1 style="margin:8px 0 0;font-family:'Cormorant Garamond',serif;font-weight:300;font-size:30px;line-height:1.12;color:#f0ebe0">Plano de <em style="font-style:italic;color:#b8974a">Elevação</em> de Marca</h1></div><div style="padding:20px;border:1px solid rgba(184,151,74,0.2);border-radius:16px;background:linear-gradient(150deg,#141210,#0e0d0c);display:flex;flex-direction:column;gap:18px"><div style="display:flex;align-items:center;gap:18px"><div style="flex:none;position:relative;width:76px;height:76px;display:flex;align-items:center;justify-content:center"><svg width="76" height="76" viewBox="0 0 76 76" style="position:absolute;inset:0;transform:rotate(-90deg)"><circle cx="38" cy="38" r="${r}" fill="none" stroke="rgba(184,151,74,0.16)" stroke-width="2"/><circle cx="38" cy="38" r="${r}" fill="none" stroke="#b8974a" stroke-width="2" stroke-linecap="round" stroke-dasharray="${len.toFixed(2)}" stroke-dashoffset="${offset.toFixed(2)}" style="transition:stroke-dashoffset .5s ease"/></svg><span style="font-family:'Cormorant Garamond',serif;font-size:23px;font-weight:300;color:#f0ebe0">${pct}%</span></div><div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:6px"><span style="font-size:8.5px;letter-spacing:2.8px;text-transform:uppercase;color:rgba(240,235,224,0.34)">Progresso geral</span><span style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;color:#f0ebe0;line-height:1.2">${doneCount} de ${total} tarefas</span><span style="font-size:10px;font-weight:300;color:rgba(240,235,224,0.5)">${ps}</span></div></div><div style="display:flex;gap:10px"><button onclick="App.go('tarefas')" style="flex:1;min-height:46px;border:0;border-radius:10px;background:#b8974a;color:#0a0a0a;font-family:Montserrat,sans-serif;font-size:9.5px;font-weight:500;letter-spacing:2.2px;text-transform:uppercase;cursor:pointer">Continuar plano</button><button onclick="App.go('fases')" style="flex:none;min-height:46px;padding:0 18px;border:1px solid rgba(184,151,74,0.3);border-radius:10px;background:transparent;color:#f0ebe0;font-family:Montserrat,sans-serif;font-size:9.5px;letter-spacing:2.2px;text-transform:uppercase;cursor:pointer">Fases</button></div></div><div style="display:flex;flex-direction:column;gap:10px"><div style="display:flex;align-items:baseline;justify-content:space-between"><span style="font-size:8.5px;letter-spacing:2.8px;text-transform:uppercase;color:rgba(240,235,224,0.34)">Próxima ação</span><button onclick="App.go('tarefas')" style="border:0;background:transparent;padding:6px 0;font-family:Montserrat,sans-serif;font-size:8.5px;letter-spacing:2px;text-transform:uppercase;color:#b8974a;cursor:pointer">Ver todas</button></div>${nh}</div><div style="display:flex;flex-direction:column;gap:11px"><span style="font-size:8.5px;letter-spacing:2.8px;text-transform:uppercase;color:rgba(240,235,224,0.34)">Fases</span><div style="display:flex;gap:11px;overflow-x:auto;padding-bottom:4px;margin:0 -18px;padding-left:18px;padding-right:18px">${pc}</div></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:9px"><div style="padding:15px 8px;border:1px solid rgba(184,151,74,0.14);border-radius:12px;background:#111111;display:flex;flex-direction:column;gap:6px;align-items:center"><span style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:#b8974a;line-height:1">7</span><span style="font-size:7.5px;letter-spacing:2px;text-transform:uppercase;color:rgba(240,235,224,0.4)">Fases</span></div><div style="padding:15px 8px;border:1px solid rgba(184,151,74,0.14);border-radius:12px;background:#111111;display:flex;flex-direction:column;gap:6px;align-items:center"><span style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:#b8974a;line-height:1">90</span><span style="font-size:7.5px;letter-spacing:2px;text-transform:uppercase;color:rgba(240,235,224,0.4)">Dias</span></div><div style="padding:15px 8px;border:1px solid rgba(184,151,74,0.14);border-radius:12px;background:#111111;display:flex;flex-direction:column;gap:6px;align-items:center"><span style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:#b8974a;line-height:1">12</span><span style="font-size:7.5px;letter-spacing:2px;text-transform:uppercase;color:rgba(240,235,224,0.4)">Meses</span></div></div></div>`;
   },
-
-  // ── COMPUTED ──
-  allTasks() {
-    const out = [];
-    PHASES.forEach((p,pi) => p.tasks.forEach((t,ti) => {
-      out.push({id: p.num+'-'+ti, title: t.t, note: t.n, phaseLabel: 'Fase '+p.num+' · '+p.label, phaseIdx: pi});
-    }));
-    return out;
+  renderFases(){
+    const h=PHASES.map((p,i)=>{const d=p.tasks.filter((t,ti)=>this.state.done[p.num+'-'+ti]).length;const w=Math.round((d/p.tasks.length)*100)+'%';return`<button onclick="App.openPhase(${i})" style="width:100%;padding:16px;border:1px solid rgba(184,151,74,0.16);border-radius:14px;background:#111111;display:flex;align-items:center;gap:14px;text-align:left;cursor:pointer"><span style="flex:none;width:42px;height:42px;border:1px solid rgba(184,151,74,0.28);border-radius:100px;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:15px;color:#b8974a">${p.num}</span><span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:7px"><span style="font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:300;color:#f0ebe0;line-height:1.15">${p.label}</span><span style="font-size:8.5px;letter-spacing:2px;text-transform:uppercase;color:rgba(240,235,224,0.38)">${p.period} · ${d}/${p.tasks.length}</span><span style="display:block;width:100%;height:2px;border-radius:2px;background:rgba(184,151,74,0.14)"><span style="display:block;height:2px;background:#b8974a;border-radius:2px;width:${w}"></span></span></span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#b8974a" stroke-width="1.3" style="flex:none"><path d="M9 5l7 7-7 7"/></svg></button>`;}).join('');
+    return`<div style="padding:22px 18px 26px;display:flex;flex-direction:column;gap:14px"><div><h1 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:300;font-size:28px;color:#f0ebe0">As sete <em style="font-style:italic;color:#b8974a">fases</em></h1><p style="margin:9px 0 0;font-size:11px;font-weight:300;line-height:1.7;color:rgba(240,235,224,0.5)">Doze meses divididos em movimentos curtos.</p></div><div style="display:flex;flex-direction:column;gap:9px">${h}</div></div>`;
   },
-
-  stats() {
-    const all = this.allTasks();
-    const doneCount = all.filter(t => this.state.done[t.id]).length;
-    const total = all.length;
-    const pct = total ? Math.round((doneCount/total)*100) : 0;
-    return {all, doneCount, total, pct, pending: total-doneCount};
+  renderFase(idx){
+    const p=PHASES[idx];const cd=p.tasks.filter((t,ti)=>this.state.done[p.num+'-'+ti]).length;const w=Math.round((cd/p.tasks.length)*100)+'%';
+    const pi=(idx+PHASES.length-1)%PHASES.length,ni=(idx+1)%PHASES.length;
+    const th=p.tasks.map((t,ti)=>{const id=p.num+'-'+ti,d=!!this.state.done[id];const ck=d?`<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#0a0a0a" stroke-width="2.6"><path d="M4 12.5l5.5 5.5L20 6.5"/></svg>`:'';return`<button onclick="App.toggle('${id}')" style="width:100%;min-height:56px;padding:14px 15px;border:1px solid rgba(184,151,74,0.16);border-radius:12px;background:${d?'#0d0d0d':'#111111'};display:flex;align-items:flex-start;gap:13px;text-align:left;cursor:pointer"><span style="flex:none;width:20px;height:20px;margin-top:1px;border:1px solid #b8974a;border-radius:5px;display:flex;align-items:center;justify-content:center;background:${d?GOLD:'transparent'}">${ck}</span><span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:5px"><span style="font-size:12px;font-weight:300;line-height:1.5;color:${d?'rgba(240,235,224,0.4)':'#f0ebe0'};text-decoration:${d?'line-through':'none'}">${t.t}</span><span style="font-size:9.5px;font-weight:300;line-height:1.55;color:rgba(240,235,224,0.38)">${t.n}</span></span></button>`;}).join('');
+    return`<div style="padding:22px 18px 26px;display:flex;flex-direction:column;gap:20px"><div><div style="font-size:8.5px;letter-spacing:3.4px;text-transform:uppercase;color:#b8974a">Fase ${p.num} · ${p.period}</div><h1 style="margin:12px 0 0;font-family:'Cormorant Garamond',serif;font-weight:300;font-size:32px;line-height:1.1;color:#f0ebe0">${p.label}</h1><p style="margin:14px 0 0;font-size:12.5px;font-weight:300;line-height:1.78;color:rgba(240,235,224,0.68)">${p.intro}</p></div><div style="padding:14px 16px;border:1px solid rgba(184,151,74,0.18);border-radius:12px;background:#111111;display:flex;align-items:center;gap:14px"><span style="flex:1;display:flex;flex-direction:column;gap:7px"><span style="font-size:8px;letter-spacing:2.6px;text-transform:uppercase;color:rgba(240,235,224,0.34)">Andamento da fase</span><span style="display:block;width:100%;height:3px;border-radius:3px;background:rgba(184,151,74,0.14)"><span style="display:block;height:3px;background:#b8974a;border-radius:3px;width:${w}"></span></span></span><span style="flex:none;font-family:'Cormorant Garamond',serif;font-size:20px;color:#f0ebe0">${cd}/${p.tasks.length}</span></div><div style="display:flex;flex-direction:column;gap:9px"><span style="font-size:8.5px;letter-spacing:2.8px;text-transform:uppercase;color:rgba(240,235,224,0.34)">Tarefas</span>${th}</div><div style="padding:18px 20px;border-left:1px solid #b8974a;background:linear-gradient(to right,rgba(184,151,74,0.05),transparent)"><p style="margin:0;font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;font-size:19px;line-height:1.45;color:#f0ebe0">${p.quote}</p></div><div style="position:relative;padding:26px 20px 22px;border:1px solid rgba(184,151,74,0.36);border-radius:14px;background:radial-gradient(circle at 20% 0%,rgba(184,151,74,0.07),transparent 70%)"><span style="position:absolute;top:-6px;left:18px;padding:0 8px;background:#0a0a0a;font-size:7.5px;letter-spacing:3.2px;text-transform:uppercase;color:#b8974a">Resultado</span><p style="margin:0;font-size:11.5px;font-weight:300;line-height:1.8;color:rgba(240,235,224,0.75)">${p.result}</p></div><div style="display:flex;gap:10px"><button onclick="App.openPhase(${pi})" style="flex:1;min-height:46px;border:1px solid rgba(184,151,74,0.22);border-radius:10px;background:transparent;color:rgba(240,235,224,0.65);font-family:Montserrat,sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;cursor:pointer">Anterior</button><button onclick="App.openPhase(${ni})" style="flex:1;min-height:46px;border:0;border-radius:10px;background:#b8974a;color:#0a0a0a;font-family:Montserrat,sans-serif;font-size:9px;font-weight:500;letter-spacing:2px;text-transform:uppercase;cursor:pointer">Próxima fase</button></div></div>`;
   },
-
-  // ── RENDER ──
-  render() {
-    const s = this.state;
-    const {all, doneCount, total, pct, pending} = this.stats();
-
-    // Update header subtitle
-    const subs = {home:'Plano de elevação · 12 meses', fases:'Sete fases', fase:'Fase '+PHASES[s.phaseIdx].num, tarefas:'Checklist do plano', marca:'Kit de marca', perfil:'Estúdio'};
-    document.getElementById('hdr-sub').textContent = subs[s.tab] || '';
-
-    // Back button (only on fase)
-    const backBtn = document.getElementById('btn-back');
-    backBtn.style.display = s.tab === 'fase' ? 'flex' : 'none';
-
-    // Nav colors
-    const INACTIVE = 'rgba(240,235,224,0.34)';
-    document.getElementById('nav-home').style.color = s.tab==='home' ? GOLD : INACTIVE;
-    document.getElementById('nav-fases').style.color = (s.tab==='fases'||s.tab==='fase') ? GOLD : INACTIVE;
-    document.getElementById('nav-tarefas').style.color = s.tab==='tarefas' ? GOLD : INACTIVE;
-    document.getElementById('nav-marca').style.color = s.tab==='marca' ? GOLD : INACTIVE;
-    document.getElementById('nav-perfil').style.color = s.tab==='perfil' ? GOLD : INACTIVE;
-
-    // Render screen
-    const content = document.getElementById('screen-content');
-    const prev = content.querySelector('section');
-    const sec = document.createElement('section');
-    sec.style.cssText = 'position:relative;animation:lmIn .28s ease both;display:flex;flex-direction:column';
-
-    if (s.tab === 'home') sec.innerHTML = this.renderHome(doneCount, total, pct, pending, all);
-    else if (s.tab === 'fases') sec.innerHTML = this.renderFases();
-    else if (s.tab === 'fase') sec.innerHTML = this.renderFase(s.phaseIdx);
-    else if (s.tab === 'tarefas') sec.innerHTML = this.renderTarefas(all, doneCount, pending);
-    else if (s.tab === 'marca') sec.innerHTML = this.renderMarca();
-    else if (s.tab === 'perfil') sec.innerHTML = this.renderPerfil(pct, doneCount);
-
-    if (prev) content.removeChild(prev);
-    content.appendChild(sec);
+  renderTarefas(all,doneCount,pending){
+    const s=this.state;
+    const fl=all.filter(t=>s.filter==='todas'?true:s.filter==='feitas'?s.done[t.id]:!s.done[t.id]);
+    const fh=[{key:'pendentes',label:'Pendentes'},{key:'todas',label:'Todas'},{key:'feitas',label:'Feitas'}].map(f=>{const a=s.filter===f.key;return`<button onclick="App.setFilter('${f.key}')" style="flex:1;min-height:42px;border:0;border-radius:8px;background:${a?GOLD:'#0f0f0f'};color:${a?'#0a0a0a':'rgba(240,235,224,0.55)'};font-family:Montserrat,sans-serif;font-size:8.5px;letter-spacing:2px;text-transform:uppercase;cursor:pointer">${f.label}</button>`;}).join('');
+    const th=fl.map(t=>{const d=!!s.done[t.id];const ck=d?`<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#0a0a0a" stroke-width="2.6"><path d="M4 12.5l5.5 5.5L20 6.5"/></svg>`:'';return`<button onclick="App.toggle('${t.id}')" style="width:100%;min-height:56px;padding:14px 15px;border:1px solid rgba(184,151,74,0.16);border-radius:12px;background:${d?'#0d0d0d':'#111111'};display:flex;align-items:flex-start;gap:13px;text-align:left;cursor:pointer"><span style="flex:none;width:20px;height:20px;margin-top:1px;border:1px solid #b8974a;border-radius:5px;display:flex;align-items:center;justify-content:center;background:${d?GOLD:'transparent'}">${ck}</span><span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:6px"><span style="font-size:7.5px;letter-spacing:2.4px;text-transform:uppercase;color:#b8974a">${t.phaseLabel}</span><span style="font-size:12px;font-weight:300;line-height:1.5;color:${d?'rgba(240,235,224,0.4)':'#f0ebe0'};text-decoration:${d?'line-through':'none'}">${t.title}</span></span></button>`;}).join('');
+    const eh=fl.length===0?`<div style="padding:34px 20px;border:1px solid rgba(184,151,74,0.16);border-radius:14px;background:#111111;text-align:center"><p style="margin:0;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:19px;font-weight:300;color:rgba(240,235,224,0.55)">Nada aqui por enquanto.</p></div>`:'';
+    return`<div style="padding:22px 18px 26px;display:flex;flex-direction:column;gap:16px"><div><h1 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:300;font-size:28px;color:#f0ebe0">Suas <em style="font-style:italic;color:#b8974a">tarefas</em></h1><p style="margin:9px 0 0;font-size:11px;font-weight:300;line-height:1.7;color:rgba(240,235,224,0.5)">${doneCount} concluídas · ${pending} pendentes</p></div><div style="display:flex;gap:1px;padding:1px;border:1px solid rgba(184,151,74,0.18);border-radius:10px;background:rgba(184,151,74,0.1)">${fh}</div><div style="display:flex;flex-direction:column;gap:9px">${th}${eh}</div></div>`;
   },
-
-  // ── SCREENS ──
-  renderHome(doneCount, total, pct, pending, all) {
-    const r = 34, len = 2 * Math.PI * r;
-    const offset = len * (1 - pct/100);
-    const next = all.find(t => !this.state.done[t.id]);
-    const activePhase = next ? PHASES[next.phaseIdx] : null;
-    const phaseStatus = activePhase ? 'Em curso: fase '+activePhase.num+' · '+activePhase.period : 'Todas as fases concluídas';
-
-    const phaseCardsHtml = PHASES.map((p,i) => {
-      const d = p.tasks.filter((t,ti) => this.state.done[p.num+'-'+ti]).length;
-      const w = Math.round((d/p.tasks.length)*100)+'%';
-      return `<button onclick="App.openPhase(${i})" style="flex:none;width:150px;padding:16px 15px;border:1px solid rgba(184,151,74,0.18);border-radius:14px;background:#111111;display:flex;flex-direction:column;gap:10px;text-align:left;cursor:pointer;transition:background .2s ease">
-        <span style="font-family:'Cormorant Garamond',serif;font-size:11px;color:#b8974a;letter-spacing:1px">${p.num}</span>
-        <span style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300;color:#f0ebe0;line-height:1.15;min-height:42px">${p.label}</span>
-        <span style="display:block;width:100%;height:2px;border-radius:2px;background:rgba(184,151,74,0.16);overflow:hidden"><span style="display:block;height:2px;background:#b8974a;border-radius:2px;width:${w};transition:width .4s ease"></span></span>
-        <span style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(240,235,224,0.38)">${d}/${p.tasks.length}</span>
-      </button>`;
-    }).join('');
-
-    const nextHtml = next ? `
-      <div style="padding:16px 16px 14px;border:1px solid rgba(184,151,74,0.18);border-radius:14px;background:#111111;display:flex;flex-direction:column;gap:14px">
-        <div style="display:flex;flex-direction:column;gap:7px">
-          <span style="font-size:8px;letter-spacing:2.6px;text-transform:uppercase;color:#b8974a">${next.phaseLabel}</span>
-          <span style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;line-height:1.25;color:#f0ebe0">${next.title}</span>
-          <span style="font-size:10.5px;font-weight:300;line-height:1.6;color:rgba(240,235,224,0.5)">${next.note}</span>
-        </div>
-        <div style="display:flex;gap:9px">
-          <button onclick="App.toggle('${next.id}')" style="flex:1;min-height:44px;border:1px solid #b8974a;border-radius:10px;background:rgba(184,151,74,0.1);color:#f0ebe0;font-family:Montserrat,sans-serif;font-size:9px;font-weight:400;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:background .2s ease">Marcar concluída</button>
-          <button onclick="App.openPhase(${next.phaseIdx})" style="flex:none;min-height:44px;padding:0 16px;border:1px solid rgba(184,151,74,0.22);border-radius:10px;background:transparent;color:rgba(240,235,224,0.7);font-family:Montserrat,sans-serif;font-size:9px;font-weight:300;letter-spacing:2px;text-transform:uppercase;cursor:pointer">Abrir fase</button>
-        </div>
-      </div>` :
-      `<div style="padding:22px 18px;border:1px solid rgba(184,151,74,0.4);border-radius:14px;background:radial-gradient(circle at 20% 0%,rgba(184,151,74,0.08),transparent 70%)">
-        <span style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:21px;font-weight:300;color:#f0ebe0;display:block;margin-bottom:8px">Plano concluído.</span>
-        <span style="font-size:10.5px;font-weight:300;line-height:1.6;color:rgba(240,235,224,0.55)">Os doze meses foram cumpridos. Reabra qualquer fase para revisar padrões.</span>
-      </div>`;
-
-    return `<div style="padding:22px 18px 26px;display:flex;flex-direction:column;gap:18px">
-      <div>
-        <div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(240,235,224,0.34)">Guaíra · SP</div>
-        <h1 style="margin:8px 0 0;font-family:'Cormorant Garamond',serif;font-weight:300;font-size:30px;line-height:1.12;color:#f0ebe0">Plano de <em style="font-style:italic;color:#b8974a">Elevação</em> de Marca</h1>
-      </div>
-
-      <div style="padding:20px;border:1px solid rgba(184,151,74,0.2);border-radius:16px;background:linear-gradient(150deg,#141210,#0e0d0c);display:flex;flex-direction:column;gap:18px">
-        <div style="display:flex;align-items:center;gap:18px">
-          <div style="flex:none;position:relative;width:76px;height:76px;display:flex;align-items:center;justify-content:center">
-            <svg width="76" height="76" viewBox="0 0 76 76" style="position:absolute;inset:0;transform:rotate(-90deg)">
-              <circle cx="38" cy="38" r="${r}" fill="none" stroke="rgba(184,151,74,0.16)" stroke-width="2"/>
-              <circle cx="38" cy="38" r="${r}" fill="none" stroke="#b8974a" stroke-width="2" stroke-linecap="round" stroke-dasharray="${len.toFixed(2)}" stroke-dashoffset="${offset.toFixed(2)}" style="transition:stroke-dashoffset .5s ease"/>
-            </svg>
-            <span style="font-family:'Cormorant Garamond',serif;font-size:23px;font-weight:300;color:#f0ebe0">${pct}%</span>
-          </div>
-          <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:6px">
-            <span style="font-size:8.5px;letter-spacing:2.8px;text-transform:uppercase;color:rgba(240,235,224,0.34)">Progresso geral</span>
-            <span style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;color:#f0ebe0;line-height:1.2">${doneCount} de ${total} tarefas</span>
-            <span style="font-size:10px;font-weight:300;color:rgba(240,235,224,0.5)">${phaseStatus}</span>
-          </div>
-        </div>
-        <div style="display:flex;gap:10px">
-          <button onclick="App.go('tarefas')" style="flex:1;min-height:46px;border:0;border-radius:10px;background:#b8974a;color:#0a0a0a;font-family:Montserrat,sans-serif;font-size:9.5px;font-weight:500;letter-spacing:2.2px;text-transform:uppercase;cursor:pointer;transition:background .2s ease">Continuar plano</button>
-          <button onclick="App.go('fases')" style="flex:none;min-height:46px;padding:0 18px;border:1px solid rgba(184,151,74,0.3);border-radius:10px;background:transparent;color:#f0ebe0;font-family:Montserrat,sans-serif;font-size:9.5px;font-weight:300;letter-spacing:2.2px;text-transform:uppercase;cursor:pointer">Fases</button>
-        </div>
-      </div>
-
-      <div style="display:flex;flex-direction:column;gap:10px">
-        <div style="display:flex;align-items:baseline;justify-content:space-between">
-          <span style="font-size:8.5px;letter-spacing:2.8px;text-transform:uppercase;color:rgba(240,235,224,0.34)">Próxima ação</span>
-          <button onclick="App.go('tarefas')" style="border:0;background:transparent;padding:6px 0;font-family:Montserrat,sans-serif;font-size:8.5px;letter-spacing:2px;text-transform:uppercase;color:#b8974a;cursor:pointer">Ver todas</button>
-        </div>
-        ${nextHtml}
-      </div>
-
-      <div style="display:flex;flex-direction:column;gap:11px">
-        <span style="font-size:8.5px;letter-spacing:2.8px;text-transform:uppercase;color:rgba(240,235,224,0.34)">Fases</span>
-        <div style="display:flex;gap:11px;overflow-x:auto;padding-bottom:4px;margin:0 -18px;padding-left:18px;padding-right:18px">
-          ${phaseCardsHtml}
-        </div>
-      </div>
-
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:9px">
-        <div style="padding:15px 8px;border:1px solid rgba(184,151,74,0.14);border-radius:12px;background:#111111;display:flex;flex-direction:column;gap:6px;align-items:center">
-          <span style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:#b8974a;line-height:1">7</span>
-          <span style="font-size:7.5px;letter-spacing:2px;text-transform:uppercase;color:rgba(240,235,224,0.4)">Fases</span>
-        </div>
-        <div style="padding:15px 8px;border:1px solid rgba(184,151,74,0.14);border-radius:12px;background:#111111;display:flex;flex-direction:column;gap:6px;align-items:center">
-          <span style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:#b8974a;line-height:1">90</span>
-          <span style="font-size:7.5px;letter-spacing:2px;text-transform:uppercase;color:rgba(240,235,224,0.4)">Dias</span>
-        </div>
-        <div style="padding:15px 8px;border:1px solid rgba(184,151,74,0.14);border-radius:12px;background:#111111;display:flex;flex-direction:column;gap:6px;align-items:center">
-          <span style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:#b8974a;line-height:1">12</span>
-          <span style="font-size:7.5px;letter-spacing:2px;text-transform:uppercase;color:rgba(240,235,224,0.4)">Meses</span>
-        </div>
-      </div>
-    </div>`;
+  renderMarca(){
+    const sh=SWAPS.map(s=>`<div style="display:grid;grid-template-columns:1fr 24px 1fr;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid rgba(184,151,74,0.1)"><span style="font-size:10.5px;font-weight:300;color:rgba(240,235,224,0.32);text-decoration:line-through">${s.from}</span><span style="text-align:center;color:#b8974a;font-size:11px">→</span><span style="font-family:'Cormorant Garamond',serif;font-size:16px;color:#f0ebe0">${s.to}</span></div>`).join('');
+    const th=TONE.map(t=>`<span style="padding:9px 14px;border:1px solid rgba(184,151,74,0.26);border-radius:100px;font-size:8.5px;letter-spacing:2px;text-transform:uppercase;color:rgba(240,235,224,0.72)">${t}</span>`).join('');
+    return`<div style="padding:22px 18px 26px;display:flex;flex-direction:column;gap:22px"><div><h1 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:300;font-size:28px;color:#f0ebe0">Kit de <em style="font-style:italic;color:#b8974a">marca</em></h1><p style="margin:9px 0 0;font-size:11px;font-weight:300;line-height:1.7;color:rgba(240,235,224,0.5)">Paleta, vocabulário e tom de voz.</p></div><div style="display:flex;flex-direction:column;gap:11px"><span style="font-size:8.5px;letter-spacing:2.8px;text-transform:uppercase;color:rgba(240,235,224,0.34)">Paleta</span><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:9px"><div style="display:flex;flex-direction:column;gap:7px"><span style="display:block;height:56px;border-radius:10px;border:1px solid rgba(184,151,74,0.2);background:#0a0a0a"></span><span style="font-size:7.5px;color:rgba(240,235,224,0.4)">#0A0A0A</span></div><div style="display:flex;flex-direction:column;gap:7px"><span style="display:block;height:56px;border-radius:10px;background:#b8974a"></span><span style="font-size:7.5px;color:rgba(240,235,224,0.4)">#B8974A</span></div><div style="display:flex;flex-direction:column;gap:7px"><span style="display:block;height:56px;border-radius:10px;background:#d4b06a"></span><span style="font-size:7.5px;color:rgba(240,235,224,0.4)">#D4B06A</span></div><div style="display:flex;flex-direction:column;gap:7px"><span style="display:block;height:56px;border-radius:10px;background:#f0ebe0"></span><span style="font-size:7.5px;color:rgba(240,235,224,0.4)">#F0EBE0</span></div></div></div><div style="display:flex;flex-direction:column;gap:11px"><span style="font-size:8.5px;letter-spacing:2.8px;text-transform:uppercase;color:rgba(240,235,224,0.34)">Trocas de vocabulário</span><div style="border:1px solid rgba(184,151,74,0.16);border-radius:14px;overflow:hidden;background:#111111">${sh}</div></div><div style="display:flex;flex-direction:column;gap:11px"><span style="font-size:8.5px;letter-spacing:2.8px;text-transform:uppercase;color:rgba(240,235,224,0.34)">Tom de voz</span><div style="display:flex;flex-wrap:wrap;gap:8px">${th}</div></div><div style="display:flex;flex-direction:column;gap:11px"><span style="font-size:8.5px;letter-spacing:2.8px;text-transform:uppercase;color:rgba(240,235,224,0.34)">Assinatura visual</span><div style="display:grid;grid-template-columns:1fr 1fr;gap:9px"><div style="padding:16px;border:1px solid rgba(184,151,74,0.16);border-radius:12px;background:#111111;display:flex;flex-direction:column;gap:8px"><span style="font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:300;color:#f0ebe0">Luz de janela</span><span style="font-size:9.5px;font-weight:300;line-height:1.55;color:rgba(240,235,224,0.42)">Fonte única, lateral, sombra desenhada.</span></div><div style="padding:16px;border:1px solid rgba(184,151,74,0.16);border-radius:12px;background:#111111;display:flex;flex-direction:column;gap:8px"><span style="font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:300;color:#f0ebe0">Paleta terrosa</span><span style="font-size:9.5px;font-weight:300;line-height:1.55;color:rgba(240,235,224,0.42)">Creme, areia, terracota, preto.</span></div><div style="padding:16px;border:1px solid rgba(184,151,74,0.16);border-radius:12px;background:#111111;display:flex;flex-direction:column;gap:8px"><span style="font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:300;color:#f0ebe0">Gesto contido</span><span style="font-size:9.5px;font-weight:300;line-height:1.55;color:rgba(240,235,224,0.42)">Olhar fora da câmera, mão no colo.</span></div><div style="padding:16px;border:1px solid rgba(184,151,74,0.16);border-radius:12px;background:#111111;display:flex;flex-direction:column;gap:8px"><span style="font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:300;color:#f0ebe0">Grão fino</span><span style="font-size:9.5px;font-weight:300;line-height:1.55;color:rgba(240,235,224,0.42)">Textura de filme, preto suave.</span></div></div></div></div>`;
   },
-
-  renderFases() {
-    const cardsHtml = PHASES.map((p,i) => {
-      const d = p.tasks.filter((t,ti) => this.state.done[p.num+'-'+ti]).length;
-      const w = Math.round((d/p.tasks.length)*100)+'%';
-      return `<button onclick="App.openPhase(${i})" style="width:100%;padding:16px;border:1px solid rgba(184,151,74,0.16);border-radius:14px;background:#111111;display:flex;align-items:center;gap:14px;text-align:left;cursor:pointer;transition:background .2s ease">
-        <span style="flex:none;width:42px;height:42px;border:1px solid rgba(184,151,74,0.28);border-radius:100px;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:15px;color:#b8974a">${p.num}</span>
-        <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:7px">
-          <span style="font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:300;color:#f0ebe0;line-height:1.15">${p.label}</span>
-          <span style="font-size:8.5px;letter-spacing:2px;text-transform:uppercase;color:rgba(240,235,224,0.38)">${p.period} · ${d}/${p.tasks.length}</span>
-          <span style="display:block;width:100%;height:2px;border-radius:2px;background:rgba(184,151,74,0.14)"><span style="display:block;height:2px;background:#b8974a;border-radius:2px;width:${w};transition:width .4s ease"></span></span>
-        </span>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#b8974a" stroke-width="1.3" style="flex:none"><path d="M9 5l7 7-7 7"/></svg>
-      </button>`;
-    }).join('');
-
-    return `<div style="padding:22px 18px 26px;display:flex;flex-direction:column;gap:14px">
-      <div>
-        <h1 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:300;font-size:28px;color:#f0ebe0">As sete <em style="font-style:italic;color:#b8974a">fases</em></h1>
-        <p style="margin:9px 0 0;font-size:11px;font-weight:300;line-height:1.7;color:rgba(240,235,224,0.5)">Doze meses divididos em movimentos curtos. Abra uma fase para ver as tarefas e o resultado esperado.</p>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:9px">${cardsHtml}</div>
-    </div>`;
-  },
-
-  renderFase(idx) {
-    const p = PHASES[idx];
-    const curDone = p.tasks.filter((t,ti) => this.state.done[p.num+'-'+ti]).length;
-    const w = Math.round((curDone/p.tasks.length)*100)+'%';
-    const prevIdx = (idx + PHASES.length - 1) % PHASES.length;
-    const nextIdx = (idx + 1) % PHASES.length;
-
-    const tasksHtml = p.tasks.map((t,ti) => {
-      const id = p.num+'-'+ti;
-      const done = !!this.state.done[id];
-      const bg = done ? '#0d0d0d' : '#111111';
-      const boxBg = done ? GOLD : 'transparent';
-      const color = done ? 'rgba(240,235,224,0.4)' : '#f0ebe0';
-      const strike = done ? 'line-through' : 'none';
-      const check = done ? `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#0a0a0a" stroke-width="2.6"><path d="M4 12.5l5.5 5.5L20 6.5"/></svg>` : '';
-      return `<button onclick="App.toggle('${id}')" style="width:100%;min-height:56px;padding:14px 15px;border:1px solid rgba(184,151,74,0.16);border-radius:12px;background:${bg};display:flex;align-items:flex-start;gap:13px;text-align:left;cursor:pointer;transition:background .2s ease">
-        <span style="flex:none;width:20px;height:20px;margin-top:1px;border:1px solid #b8974a;border-radius:5px;display:flex;align-items:center;justify-content:center;background:${boxBg};transition:background .2s ease">${check}</span>
-        <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:5px">
-          <span style="font-family:Montserrat,sans-serif;font-size:12px;font-weight:300;line-height:1.5;color:${color};text-decoration:${strike}">${t.t}</span>
-          <span style="font-size:9.5px;font-weight:300;line-height:1.55;color:rgba(240,235,224,0.38)">${t.n}</span>
-        </span>
-      </button>`;
-    }).join('');
-
-    return `<div style="padding:22px 18px 26px;display:flex;flex-direction:column;gap:20px">
-      <div>
-        <div style="font-size:8.5px;letter-spacing:3.4px;text-transform:uppercase;color:#b8974a">Fase ${p.num} · ${p.period}</div>
-        <h1 style="margin:12px 0 0;font-family:'Cormorant Garamond',serif;font-weight:300;font-size:32px;line-height:1.1;color:#f0ebe0">${p.label}</h1>
-        <p style="margin:14px 0 0;font-size:12.5px;font-weight:300;line-height:1.78;color:rgba(240,235,224,0.68)">${p.intro}</p>
-      </div>
-
-      <div style="padding:14px 16px;border:1px solid rgba(184,151,74,0.18);border-radius:12px;background:#111111;display:flex;align-items:center;gap:14px">
-        <span style="flex:1;display:flex;flex-direction:column;gap:7px">
-          <span style="font-size:8px;letter-spacing:2.6px;text-transform:uppercase;color:rgba(240,235,224,0.34)">Andamento da fase</span>
-          <span style="display:block;width:100%;height:3px;border-radius:3px;background:rgba(184,151,74,0.14)"><span style="display:block;height:3px;background:#b8974a;border-radius:3px;width:${w};transition:width .4s ease"></span></span>
-        </span>
-        <span style="flex:none;font-family:'Cormorant Garamond',serif;font-size:20px;color:#f0ebe0">${curDone}/${p.tasks.length}</span>
-      </div>
-
-      <div style="display:flex;flex-direction:column;gap:9px">
-        <span style="font-size:8.5px;letter-spacing:2.8px;text-transform:uppercase;color:rgba(240,235,224,0.34)">Tarefas</span>
-        ${tasksHtml}
-      </div>
-
-      <div style="padding:18px 20px;border-left:1px solid #b8974a;background:linear-gradient(to right,rgba(184,151,74,0.05),transparent)">
-        <p style="margin:0;font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;font-size:19px;line-height:1.45;color:#f0ebe0">${p.quote}</p>
-      </div>
-
-      <div style="position:relative;padding:26px 20px 22px;border:1px solid rgba(184,151,74,0.36);border-radius:14px;background:radial-gradient(circle at 20% 0%,rgba(184,151,74,0.07),transparent 70%)">
-        <span style="position:absolute;top:-6px;left:18px;padding:0 8px;background:#0a0a0a;font-size:7.5px;letter-spacing:3.2px;text-transform:uppercase;color:#b8974a">Resultado</span>
-        <p style="margin:0;font-size:11.5px;font-weight:300;line-height:1.8;color:rgba(240,235,224,0.75)">${p.result}</p>
-      </div>
-
-      <div style="display:flex;gap:10px">
-        <button onclick="App.openPhase(${prevIdx})" style="flex:1;min-height:46px;border:1px solid rgba(184,151,74,0.22);border-radius:10px;background:transparent;color:rgba(240,235,224,0.65);font-family:Montserrat,sans-serif;font-size:9px;font-weight:300;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:background .2s ease">Anterior</button>
-        <button onclick="App.openPhase(${nextIdx})" style="flex:1;min-height:46px;border:0;border-radius:10px;background:#b8974a;color:#0a0a0a;font-family:Montserrat,sans-serif;font-size:9px;font-weight:500;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:background .2s ease">Próxima fase</button>
-      </div>
-    </div>`;
-  },
-
-  renderTarefas(all, doneCount, pending) {
-    const s = this.state;
-    const filtered = all.filter(t => s.filter==='todas' ? true : s.filter==='feitas' ? s.done[t.id] : !s.done[t.id]);
-
-    const filtersHtml = [
-      {key:'pendentes',label:'Pendentes'},
-      {key:'todas',label:'Todas'},
-      {key:'feitas',label:'Feitas'}
-    ].map(f => {
-      const active = s.filter === f.key;
-      return `<button onclick="App.setFilter('${f.key}')" style="flex:1;min-height:42px;border:0;border-radius:8px;background:${active?GOLD:'#0f0f0f'};color:${active?'#0a0a0a':'rgba(240,235,224,0.55)'};font-family:Montserrat,sans-serif;font-size:8.5px;font-weight:400;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:background .2s ease">${f.label}</button>`;
-    }).join('');
-
-    const tasksHtml = filtered.map(t => {
-      const done = !!s.done[t.id];
-      const bg = done ? '#0d0d0d' : '#111111';
-      const boxBg = done ? GOLD : 'transparent';
-      const color = done ? 'rgba(240,235,224,0.4)' : '#f0ebe0';
-      const strike = done ? 'line-through' : 'none';
-      const check = done ? `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#0a0a0a" stroke-width="2.6"><path d="M4 12.5l5.5 5.5L20 6.5"/></svg>` : '';
-      return `<button onclick="App.toggle('${t.id}')" style="width:100%;min-height:56px;padding:14px 15px;border:1px solid rgba(184,151,74,0.16);border-radius:12px;background:${bg};display:flex;align-items:flex-start;gap:13px;text-align:left;cursor:pointer;transition:background .2s ease">
-        <span style="flex:none;width:20px;height:20px;margin-top:1px;border:1px solid #b8974a;border-radius:5px;display:flex;align-items:center;justify-content:center;background:${boxBg};transition:background .2s ease">${check}</span>
-        <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:6px">
-          <span style="font-size:7.5px;letter-spacing:2.4px;text-transform:uppercase;color:#b8974a">${t.phaseLabel}</span>
-          <span style="font-size:12px;font-weight:300;line-height:1.5;color:${color};text-decoration:${strike}">${t.title}</span>
-        </span>
-      </button>`;
-    }).join('');
-
-    const emptyHtml = filtered.length === 0 ? `<div style="padding:34px 20px;border:1px solid rgba(184,151,74,0.16);border-radius:14px;background:#111111;text-align:center"><p style="margin:0;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:19px;font-weight:300;color:rgba(240,235,224,0.55)">Nada aqui por enquanto.</p></div>` : '';
-
-    return `<div style="padding:22px 18px 26px;display:flex;flex-direction:column;gap:16px">
-      <div>
-        <h1 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:300;font-size:28px;color:#f0ebe0">Suas <em style="font-style:italic;color:#b8974a">tarefas</em></h1>
-        <p style="margin:9px 0 0;font-size:11px;font-weight:300;line-height:1.7;color:rgba(240,235,224,0.5)">${doneCount} concluídas · ${pending} pendentes</p>
-      </div>
-      <div style="display:flex;gap:1px;padding:1px;border:1px solid rgba(184,151,74,0.18);border-radius:10px;background:rgba(184,151,74,0.1)">${filtersHtml}</div>
-      <div style="display:flex;flex-direction:column;gap:9px">${tasksHtml}${emptyHtml}</div>
-    </div>`;
-  },
-
-  renderMarca() {
-    const swapsHtml = SWAPS.map(s => `
-      <div style="display:grid;grid-template-columns:1fr 24px 1fr;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid rgba(184,151,74,0.1)">
-        <span style="font-size:10.5px;font-weight:300;color:rgba(240,235,224,0.32);text-decoration:line-through">${s.from}</span>
-        <span style="text-align:center;color:#b8974a;font-size:11px">→</span>
-        <span style="font-family:'Cormorant Garamond',serif;font-size:16px;color:#f0ebe0">${s.to}</span>
-      </div>`).join('');
-
-    const toneHtml = TONE.map(t => `<span style="padding:9px 14px;border:1px solid rgba(184,151,74,0.26);border-radius:100px;font-size:8.5px;letter-spacing:2px;text-transform:uppercase;color:rgba(240,235,224,0.72)">${t}</span>`).join('');
-
-    return `<div style="padding:22px 18px 26px;display:flex;flex-direction:column;gap:22px">
-      <div>
-        <h1 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:300;font-size:28px;color:#f0ebe0">Kit de <em style="font-style:italic;color:#b8974a">marca</em></h1>
-        <p style="margin:9px 0 0;font-size:11px;font-weight:300;line-height:1.7;color:rgba(240,235,224,0.5)">Consulta rápida no atendimento: paleta, vocabulário e tom de voz.</p>
-      </div>
-
-      <div style="display:flex;flex-direction:column;gap:11px">
-        <span style="font-size:8.5px;letter-spacing:2.8px;text-transform:uppercase;color:rgba(240,235,224,0.34)">Paleta</span>
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:9px">
-          <div style="display:flex;flex-direction:column;gap:7px"><span style="display:block;height:56px;border-radius:10px;border:1px solid rgba(184,151,74,0.2);background:#0a0a0a"></span><span style="font-size:7.5px;letter-spacing:1.2px;color:rgba(240,235,224,0.4)">#0A0A0A</span></div>
-          <div style="display:flex;flex-direction:column;gap:7px"><span style="display:block;height:56px;border-radius:10px;border:1px solid rgba(184,151,74,0.2);background:#b8974a"></span><span style="font-size:7.5px;letter-spacing:1.2px;color:rgba(240,235,224,0.4)">#B8974A</span></div>
-          <div style="display:flex;flex-direction:column;gap:7px"><span style="display:block;height:56px;border-radius:10px;border:1px solid rgba(184,151,74,0.2);background:#d4b06a"></span><span style="font-size:7.5px;letter-spacing:1.2px;color:rgba(240,235,224,0.4)">#D4B06A</span></div>
-          <div style="display:flex;flex-direction:column;gap:7px"><span style="display:block;height:56px;border-radius:10px;border:1px solid rgba(184,151,74,0.2);background:#f0ebe0"></span><span style="font-size:7.5px;letter-spacing:1.2px;color:rgba(240,235,224,0.4)">#F0EBE0</span></div>
-        </div>
-      </div>
-
-      <div style="display:flex;flex-direction:column;gap:11px">
-        <span style="font-size:8.5px;letter-spacing:2.8px;text-transform:uppercase;color:rgba(240,235,224,0.34)">Trocas de vocabulário</span>
-        <div style="border:1px solid rgba(184,151,74,0.16);border-radius:14px;overflow:hidden;background:#111111">${swapsHtml}</div>
-      </div>
-
-      <div style="display:flex;flex-direction:column;gap:11px">
-        <span style="font-size:8.5px;letter-spacing:2.8px;text-transform:uppercase;color:rgba(240,235,224,0.34)">Tom de voz</span>
-        <div style="display:flex;flex-wrap:wrap;gap:8px">${toneHtml}</div>
-      </div>
-
-      <div style="display:flex;flex-direction:column;gap:11px">
-        <span style="font-size:8.5px;letter-spacing:2.8px;text-transform:uppercase;color:rgba(240,235,224,0.34)">Assinatura visual</span>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px">
-          <div style="padding:16px;border:1px solid rgba(184,151,74,0.16);border-radius:12px;background:#111111;display:flex;flex-direction:column;gap:8px"><span style="font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:300;color:#f0ebe0">Luz de janela</span><span style="font-size:9.5px;font-weight:300;line-height:1.55;color:rgba(240,235,224,0.42)">Fonte única, lateral, sombra desenhada.</span></div>
-          <div style="padding:16px;border:1px solid rgba(184,151,74,0.16);border-radius:12px;background:#111111;display:flex;flex-direction:column;gap:8px"><span style="font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:300;color:#f0ebe0">Paleta terrosa</span><span style="font-size:9.5px;font-weight:300;line-height:1.55;color:rgba(240,235,224,0.42)">Creme, areia, terracota, preto.</span></div>
-          <div style="padding:16px;border:1px solid rgba(184,151,74,0.16);border-radius:12px;background:#111111;display:flex;flex-direction:column;gap:8px"><span style="font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:300;color:#f0ebe0">Gesto contido</span><span style="font-size:9.5px;font-weight:300;line-height:1.55;color:rgba(240,235,224,0.42)">Olhar fora da câmera, mão no colo.</span></div>
-          <div style="padding:16px;border:1px solid rgba(184,151,74,0.16);border-radius:12px;background:#111111;display:flex;flex-direction:column;gap:8px"><span style="font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:300;color:#f0ebe0">Grão fino</span><span style="font-size:9.5px;font-weight:300;line-height:1.55;color:rgba(240,235,224,0.42)">Textura de filme, preto suave.</span></div>
-        </div>
-      </div>
-    </div>`;
-  },
-
-  renderPerfil(pct, doneCount) {
-    return `<div style="padding:22px 18px 26px;display:flex;flex-direction:column;gap:20px">
-      <div style="display:flex;align-items:center;gap:15px">
-        <span style="flex:none;width:60px;height:60px;border:1px solid rgba(184,151,74,0.3);border-radius:100px;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:22px;color:#b8974a;background:#111111">L</span>
-        <span style="display:flex;flex-direction:column;gap:5px">
-          <span style="font-family:'Cormorant Garamond',serif;font-size:23px;font-weight:300;color:#f0ebe0">Lumiar Retratos</span>
-          <span style="font-size:8.5px;letter-spacing:2.4px;text-transform:uppercase;color:rgba(240,235,224,0.38)">Estúdio · Guaíra SP</span>
-        </span>
-      </div>
-
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px">
-        <div style="padding:16px;border:1px solid rgba(184,151,74,0.14);border-radius:12px;background:#111111;display:flex;flex-direction:column;gap:6px">
-          <span style="font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;color:#b8974a;line-height:1">${pct}%</span>
-          <span style="font-size:7.5px;letter-spacing:2px;text-transform:uppercase;color:rgba(240,235,224,0.4)">Do plano</span>
-        </div>
-        <div style="padding:16px;border:1px solid rgba(184,151,74,0.14);border-radius:12px;background:#111111;display:flex;flex-direction:column;gap:6px">
-          <span style="font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;color:#b8974a;line-height:1">${doneCount}</span>
-          <span style="font-size:7.5px;letter-spacing:2px;text-transform:uppercase;color:rgba(240,235,224,0.4)">Tarefas feitas</span>
-        </div>
-      </div>
-
-      <div style="border:1px solid rgba(184,151,74,0.16);border-radius:14px;overflow:hidden;background:#111111">
-        <button onclick="App.go('marca')" style="width:100%;min-height:52px;padding:0 16px;border:0;border-bottom:1px solid rgba(184,151,74,0.1);background:transparent;display:flex;align-items:center;justify-content:space-between;font-family:Montserrat,sans-serif;font-size:11px;font-weight:300;color:#f0ebe0;cursor:pointer;transition:background .2s ease">Kit de marca<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#b8974a" stroke-width="1.3"><path d="M9 5l7 7-7 7"/></svg></button>
-        <button onclick="App.go('fases')" style="width:100%;min-height:52px;padding:0 16px;border:0;border-bottom:1px solid rgba(184,151,74,0.1);background:transparent;display:flex;align-items:center;justify-content:space-between;font-family:Montserrat,sans-serif;font-size:11px;font-weight:300;color:#f0ebe0;cursor:pointer;transition:background .2s ease">Todas as fases<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#b8974a" stroke-width="1.3"><path d="M9 5l7 7-7 7"/></svg></button>
-        <button onclick="App.resetAll()" style="width:100%;min-height:52px;padding:0 16px;border:0;background:transparent;display:flex;align-items:center;justify-content:space-between;font-family:Montserrat,sans-serif;font-size:11px;font-weight:300;color:rgba(240,235,224,0.55);cursor:pointer;transition:background .2s ease">Zerar progresso<span style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#b8974a">Reset</span></button>
-      </div>
-
-      <p style="margin:0;font-size:9.5px;font-weight:300;line-height:1.7;color:rgba(240,235,224,0.3)">Progresso salvo neste dispositivo. Nenhum dado sai do aparelho.</p>
-    </div>`;
+  renderPerfil(pct,doneCount){
+    return`<div style="padding:22px 18px 26px;display:flex;flex-direction:column;gap:20px"><div style="display:flex;align-items:center;gap:15px"><span style="flex:none;width:60px;height:60px;border:1px solid rgba(184,151,74,0.3);border-radius:100px;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:22px;color:#b8974a;background:#111111">L</span><span style="display:flex;flex-direction:column;gap:5px"><span style="font-family:'Cormorant Garamond',serif;font-size:23px;font-weight:300;color:#f0ebe0">Lumiar Retratos</span><span style="font-size:8.5px;letter-spacing:2.4px;text-transform:uppercase;color:rgba(240,235,224,0.38)">Estúdio · Guaíra SP</span></span></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:9px"><div style="padding:16px;border:1px solid rgba(184,151,74,0.14);border-radius:12px;background:#111111;display:flex;flex-direction:column;gap:6px"><span style="font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;color:#b8974a;line-height:1">${pct}%</span><span style="font-size:7.5px;letter-spacing:2px;text-transform:uppercase;color:rgba(240,235,224,0.4)">Do plano</span></div><div style="padding:16px;border:1px solid rgba(184,151,74,0.14);border-radius:12px;background:#111111;display:flex;flex-direction:column;gap:6px"><span style="font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;color:#b8974a;line-height:1">${doneCount}</span><span style="font-size:7.5px;letter-spacing:2px;text-transform:uppercase;color:rgba(240,235,224,0.4)">Tarefas feitas</span></div></div><div style="border:1px solid rgba(184,151,74,0.16);border-radius:14px;overflow:hidden;background:#111111"><button onclick="Install.trigger()" style="width:100%;min-height:52px;padding:0 16px;border:0;border-bottom:1px solid rgba(184,151,74,0.1);background:transparent;display:flex;align-items:center;justify-content:space-between;font-family:Montserrat,sans-serif;font-size:11px;font-weight:300;color:#f0ebe0;cursor:pointer">Instalar na tela inicial<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#b8974a" stroke-width="1.3"><path d="M12 3v12M7 11l5 5 5-5"/><rect x="3" y="18" width="18" height="3" rx="1"/></svg></button><button onclick="App.go('marca')" style="width:100%;min-height:52px;padding:0 16px;border:0;border-bottom:1px solid rgba(184,151,74,0.1);background:transparent;display:flex;align-items:center;justify-content:space-between;font-family:Montserrat,sans-serif;font-size:11px;font-weight:300;color:#f0ebe0;cursor:pointer">Kit de marca<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#b8974a" stroke-width="1.3"><path d="M9 5l7 7-7 7"/></svg></button><button onclick="App.go('fases')" style="width:100%;min-height:52px;padding:0 16px;border:0;border-bottom:1px solid rgba(184,151,74,0.1);background:transparent;display:flex;align-items:center;justify-content:space-between;font-family:Montserrat,sans-serif;font-size:11px;font-weight:300;color:#f0ebe0;cursor:pointer">Todas as fases<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#b8974a" stroke-width="1.3"><path d="M9 5l7 7-7 7"/></svg></button><button onclick="App.resetAll()" style="width:100%;min-height:52px;padding:0 16px;border:0;background:transparent;display:flex;align-items:center;justify-content:space-between;font-family:Montserrat,sans-serif;font-size:11px;font-weight:300;color:rgba(240,235,224,0.55);cursor:pointer">Zerar progresso<span style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#b8974a">Reset</span></button></div><div style="padding:14px 16px;border:1px solid rgba(184,151,74,0.1);border-radius:12px;background:#111111;display:flex;align-items:center;justify-content:space-between"><span style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(240,235,224,0.3)">Versão</span><span style="font-family:'Cormorant Garamond',serif;font-size:16px;color:#b8974a">${VERSION}</span></div><p style="margin:0;font-size:9.5px;font-weight:300;line-height:1.7;color:rgba(240,235,224,0.3)">Progresso salvo neste dispositivo. Nenhum dado sai do aparelho.</p></div>`;
   }
 };
 
-// ── PWA Manifest ──
-try {
-  const m = {name:'Lumiar · Plano de Marca',short_name:'Lumiar',start_url:'.',display:'standalone',background_color:'#0a0a0a',theme_color:'#0a0a0a',icons:[{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' fill='%230a0a0a'/%3E%3Ctext x='96' y='115' font-family='Georgia,serif' font-size='52' text-anchor='middle' fill='%23b8974a' letter-spacing='4'%3EL%3C/text%3E%3C/svg%3E",sizes:'192x192',type:'image/svg+xml'}]};
-  const b = new Blob([JSON.stringify(m)],{type:'application/json'});
-  const l = document.createElement('link');
-  l.rel='manifest';l.href=URL.createObjectURL(b);
-  document.head.appendChild(l);
-} catch(e){}
-
-// ── BOOT ──
 App.init();
 </script>
 </body>
